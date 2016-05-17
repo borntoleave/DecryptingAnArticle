@@ -1,0 +1,4331 @@
+(* Content-type: application/mathematica *)
+
+(*** Wolfram Notebook File ***)
+(* http://www.wolfram.com/nb *)
+
+(* CreatedBy='Mathematica 7.0' *)
+
+(*CacheID: 234*)
+(* Internal cache information:
+NotebookFileLineBreakTest
+NotebookFileLineBreakTest
+NotebookDataPosition[       145,          7]
+NotebookDataLength[    167859,       4322]
+NotebookOptionsPosition[    166014,       4256]
+NotebookOutlinePosition[    166623,       4279]
+CellTagsIndexPosition[    166580,       4276]
+WindowFrame->Normal*)
+
+(* Beginning of Notebook Content *)
+Notebook[{
+Cell["\<\
+Rongzhong Li
+Feb. 13, 2013\
+\>", "Subsubtitle",
+ CellChangeTimes->{{3.5690219007184997`*^9, 3.5690219190883365`*^9}, {
+   3.5690219623126583`*^9, 3.5690219801184387`*^9}, {3.569693352201953*^9, 
+   3.569693352825015*^9}, 3.5697749369634323`*^9, {3.569789741931238*^9, 
+   3.5697897876646643`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["Test Problem 1", "Title",
+ CellChangeTimes->{{3.569791331534415*^9, 3.5697913570754147`*^9}}],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Import Data and Frequency Analysis
+This is a long text. Shifts may happen at \" \" and \"\\n\" during import. So \
+it's not likely to be a transposition  cypher. Notice during the import, the \
+\"\\n\" are deleted,  and \" \" are transformed to \"_\" for better \
+observation.
+Left and right quotes are  both set to \"\\\"\".\
+\>", "Subsection",
+ CellChangeTimes->{{3.569699597082823*^9, 3.5696996005851727`*^9}, {
+  3.569790584159415*^9, 3.5697906355614147`*^9}, {3.569790666572415*^9, 
+  3.569790843428415*^9}, {3.5697911160184145`*^9, 3.569791135764415*^9}, {
+  3.5698043915678463`*^9, 3.569804546942382*^9}, {3.5698046180084877`*^9, 
+  3.569804618619549*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"en0", "=", 
+   RowBox[{"Import", "[", 
+    RowBox[{
+     RowBox[{"StringJoin", "[", 
+      RowBox[{"{", 
+       RowBox[{
+        RowBox[{"NotebookDirectory", "[", "]"}], ",", 
+        "\"\<cipherTest1Spring2013.txt\>\""}], "}"}], "]"}], ",", 
+     "\"\<Text\>\""}], "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"en", "=", 
+   RowBox[{"StringReplace", "[", 
+    RowBox[{"en0", ",", 
+     RowBox[{"{", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"\"\<\\n\>\"", ".."}], "\[Rule]", "\"\<\>\""}], ",", 
+       RowBox[{"\"\<\[OpenCurlyDoubleQuote]\>\"", "->", "\"\<\\\"\>\""}], ",", 
+       RowBox[{
+       "\"\<\[CloseCurlyDoubleQuote]\>\"", "\[Rule]", "\"\<\\\"\>\""}], ",", 
+       RowBox[{"\"\<\[Dash]\>\"", "\[Rule]", "\"\<-\>\""}], ",", 
+       RowBox[{"\"\< \>\"", "\[Rule]", "\"\<_\>\""}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"charcode", "=", 
+    RowBox[{"ToCharacterCode", "[", "en", "]"}]}], ";"}], 
+  StyleBox[
+   RowBox[{"(*", 
+    RowBox[{"translate", " ", "to", " ", "ASCII", " ", "code"}], "*)"}],
+   FontWeight->"Plain"]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{
+   RowBox[{"fromcode", "[", "s_", "]"}], ":=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{"FromCharacterCode", "[", 
+      RowBox[{"s", "[", 
+       RowBox[{"[", "i", "]"}], "]"}], "]"}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", 
+       RowBox[{"Length", "[", "s", "]"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"char", "=", 
+   RowBox[{"fromcode", "[", "charcode", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"hist", "[", "group_", "]"}], ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{
+     RowBox[{"labeler", "[", 
+      RowBox[{"v_", ",", 
+       RowBox[{"{", 
+        RowBox[{"i_", ",", "j_"}], "}"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"ri_", ",", "cj_"}], "}"}]}], "]"}], ":=", 
+     RowBox[{"Placed", "[", 
+      RowBox[{
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{
+          RowBox[{"CharacterRange", "[", 
+           RowBox[{
+            RowBox[{"FromCharacterCode", "[", 
+             RowBox[{"Min", "[", "group", "]"}], "]"}], ",", 
+            RowBox[{"FromCharacterCode", "[", 
+             RowBox[{"Max", "[", "group", "]"}], "]"}]}], "]"}], "[", 
+          RowBox[{"[", "j", "]"}], "]"}], ",", "v"}], "}"}], ",", "Above", 
+       ",", "Column"}], "]"}]}], ";", 
+    RowBox[{"Histogram", "[", 
+     RowBox[{"group", ",", 
+      RowBox[{
+       RowBox[{"Max", "[", "group", "]"}], "-", 
+       RowBox[{"Min", "[", "group", "]"}], "+", "1"}], ",", 
+      RowBox[{"LabelingFunction", "\[Rule]", "labeler"}]}], "]"}]}], 
+   ")"}]}], "\[IndentingNewLine]", 
+ RowBox[{"hist", "[", "charcode", "]"}], "\[IndentingNewLine]"}], "Input",
+ CellChangeTimes->{{3.5689899916839705`*^9, 3.568990160646634*^9}, {
+   3.568990516030961*^9, 3.5689905267385736`*^9}, {3.569010349950445*^9, 
+   3.5690103702301855`*^9}, {3.5690104031865654`*^9, 3.569010407220916*^9}, 
+   3.5690110209124475`*^9, 3.5690114801363945`*^9, {3.569014226294096*^9, 
+   3.5690142430387707`*^9}, {3.5690236900664167`*^9, 3.569023695033913*^9}, {
+   3.56902378080649*^9, 3.569023789784387*^9}, {3.5691099229377613`*^9, 
+   3.569109925355003*^9}, {3.5696903743706093`*^9, 3.56969037767161*^9}, {
+   3.5696909906636095`*^9, 3.5696910300356092`*^9}, {3.569691936226369*^9, 
+   3.569691985520298*^9}, {3.5696921691546597`*^9, 3.569692185826327*^9}, 
+   3.569692423501092*^9, {3.569692499573698*^9, 3.569692555622303*^9}, {
+   3.5696926769134307`*^9, 3.569692749294668*^9}, {3.569693013806116*^9, 
+   3.5696930177555113`*^9}, {3.5696930637641115`*^9, 
+   3.5696930642671623`*^9}, {3.569693229103644*^9, 3.5696932298157153`*^9}, {
+   3.5696932673814716`*^9, 3.569693270300763*^9}, {3.569693310863819*^9, 
+   3.5696933219749303`*^9}, {3.5696933627090034`*^9, 3.569693416820414*^9}, {
+   3.5696935683515654`*^9, 3.569693596851415*^9}, {3.569693670336763*^9, 
+   3.5696936990746365`*^9}, {3.569693831088351*^9, 3.5696939050139575`*^9}, {
+   3.5696939864038177`*^9, 3.5696940716312943`*^9}, {3.5696941241985955`*^9, 
+   3.5696941251515956`*^9}, 3.5696943916055956`*^9, {3.569694425030596*^9, 
+   3.569694447733596*^9}, {3.5696947805845957`*^9, 3.5696949110035954`*^9}, {
+   3.5696949698015957`*^9, 3.5696949817015953`*^9}, {3.569695052947034*^9, 
+   3.5696950675034895`*^9}, {3.5696953261433506`*^9, 
+   3.5696953316649027`*^9}, {3.569695485667301*^9, 3.569695485766311*^9}, 
+   3.569695878320563*^9, {3.569696178462574*^9, 3.5696962013198595`*^9}, {
+   3.5696962347772045`*^9, 3.5696962785955863`*^9}, {3.5696964527930045`*^9, 
+   3.5696964618469095`*^9}, {3.569696677803503*^9, 3.5696969140171223`*^9}, {
+   3.5696973300367203`*^9, 3.5696973487965956`*^9}, {3.569699245549673*^9, 
+   3.569699299916109*^9}, {3.569699372588375*^9, 3.5696994595670724`*^9}, {
+   3.569699490171132*^9, 3.569699553568472*^9}, {3.569702164852976*^9, 
+   3.569702195901976*^9}, {3.5697029336714716`*^9, 3.5697029434114456`*^9}, {
+   3.5697031594840508`*^9, 3.569703159542056*^9}, {3.5697053086389666`*^9, 
+   3.5697053089709663`*^9}, {3.5697702216411695`*^9, 3.569770224666169*^9}, {
+   3.5697745344941893`*^9, 3.5697745375764976`*^9}, {3.569774944430179*^9, 
+   3.56977494704144*^9}, 3.56977514296003*^9, 3.5697772866063733`*^9, {
+   3.569777345548003*^9, 3.5697773659129667`*^9}, {3.5697854683635187`*^9, 
+   3.5697854719778805`*^9}, {3.569790517892415*^9, 3.569790527099415*^9}, {
+   3.569790944196415*^9, 3.569791007805415*^9}, {3.5697910683834147`*^9, 
+   3.5697910940844145`*^9}, {3.569791219480415*^9, 3.569791251142415*^9}, {
+   3.5697962843258586`*^9, 3.56979628913482*^9}, {3.5698040582715316`*^9, 
+   3.5698040637165318`*^9}, {3.569804267358426*^9, 3.569804268685559*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[
+  {RGBColor[0.798413061722744, 0.824719615472648, 0.968322270542458], 
+   EdgeForm[Opacity[0.7]], {}, 
+   {RGBColor[0.798413061722744, 0.824719615472648, 0.968322270542458], 
+    EdgeForm[Opacity[0.7]], {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{32, 0}, {
+         Rational[2971, 90], 3}]},
+      ImageSizeCache->{{17.749999970197678`, 22.68371055606812}, {
+       113.13444167078931`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"!\"\>"},
+          {"3"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[5851, 180], 3}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[2971, 90], 0}, {
+         Rational[1531, 45], 76}]},
+      ImageSizeCache->{{21.98371056798905, 26.917421153859465`}, {
+       106.72079280169147`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"\\\"\"\>"},
+          {"76"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[2011, 60], 76}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1531, 45], 0}, {
+         Rational[1051, 30], 4}]},
+      ImageSizeCache->{{26.217421165780394`, 31.15113175165081}, {
+       113.04658346710305`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"#\"\>"},
+          {"4"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1243, 36], 4}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1051, 30], 0}, {
+         Rational[1622, 45], 1}]},
+      ImageSizeCache->{{30.451131763571738`, 35.38484234944218}, {
+       113.31015807816186`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"$\"\>"},
+          {"1"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6397, 180], 1}], 
+      ImageScaled[{0.5, 0}]]}, {}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[571, 15], 0}, {
+         Rational[3517, 90], 43}]},
+      ImageSizeCache->{{43.152263556945826`, 48.08597414281624}, {
+       109.62011352333845`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"'\"\>"},
+          {"43"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6943, 180], 43}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3517, 90], 0}, {
+         Rational[1804, 45], 7}]},
+      ImageSizeCache->{{47.38597415473717, 52.31968474060761}, {
+       112.78300885604423`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"(\"\>"},
+          {"7"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[475, 12], 7}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1804, 45], 0}, {
+         Rational[411, 10], 7}]},
+      ImageSizeCache->{{51.61968475252854, 56.553395338398985`}, {
+       112.78300885604423`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\")\"\>"},
+          {"7"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7307, 180], 7}], 
+      ImageScaled[{0.5, 0}]]}, {}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3881, 90], 0}, {
+         Rational[662, 15], 135}]},
+      ImageSizeCache->{{64.3208165459026, 69.25452713177305}, {
+       101.53715878420144`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\",\"\>"},
+          {"135"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7853, 180], 135}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[662, 15], 0}, {
+         Rational[4063, 90], 16}]},
+      ImageSizeCache->{{68.55452714369397, 73.48823772956439}, {
+       111.99228502286778`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"-\"\>"},
+          {"16"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1607, 36], 16}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[4063, 90], 0}, {
+         Rational[2077, 45], 261}]},
+      ImageSizeCache->{{72.78823774148532, 77.72194832735576}, {
+       90.46702511973119, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\".\"\>"},
+          {"261"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[913, 20], 261}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[2077, 45], 0}, {
+         Rational[283, 6], 5}]},
+      ImageSizeCache->{{77.02194833927669, 81.9556589251471}, {
+       112.95872526341677`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"/\"\>"},
+          {"5"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[8399, 180], 5}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[283, 6], 0}, {
+         Rational[2168, 45], 29}]},
+      ImageSizeCache->{{81.25565893706803, 86.18936952293848}, {
+       110.85012837494625`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"0\"\>"},
+          {"29"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[8581, 180], 29}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[2168, 45], 0}, {
+         Rational[4427, 90], 31}]},
+      ImageSizeCache->{{85.4893695348594, 90.42308012072982}, {
+       110.6744119675737, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"1\"\>"},
+          {"31"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[2921, 60], 31}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[4427, 90], 0}, {
+         Rational[251, 5], 20}]},
+      ImageSizeCache->{{89.72308013265075, 94.6567907185212}, {
+       111.6408522081227, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"2\"\>"},
+          {"20"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1789, 36], 20}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[251, 5], 0}, {
+         Rational[4609, 90], 23}]},
+      ImageSizeCache->{{93.95679073044212, 98.89050131631254}, {
+       111.37727759706388`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"3\"\>"},
+          {"23"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[9127, 180], 23}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[4609, 90], 0}, {
+         Rational[470, 9], 19}]},
+      ImageSizeCache->{{98.19050132823347, 103.12421191410388`}, {
+       111.72871041180896`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"4\"\>"},
+          {"19"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[3103, 60], 19}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[470, 9], 0}, {
+         Rational[1597, 30], 42}]},
+      ImageSizeCache->{{102.42421192602481`, 107.35792251189525`}, {
+       109.70797172702471`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"5\"\>"},
+          {"42"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[9491, 180], 42}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1597, 30], 0}, {
+         Rational[2441, 45], 101}]},
+      ImageSizeCache->{{106.65792252381618`, 111.59163310968663`}, {
+       104.52433770953468`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"6\"\>"},
+          {"101"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[9673, 180], 101}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[2441, 45], 0}, {
+         Rational[4973, 90], 50}]},
+      ImageSizeCache->{{110.89163312160755`, 115.82534370747797`}, {
+       109.00510609753454`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"7\"\>"},
+          {"50"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[219, 4], 50}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[4973, 90], 0}, {
+         Rational[844, 15], 71}]},
+      ImageSizeCache->{{115.1253437193989, 120.05905430526931`}, {
+       107.16008382012284`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"8\"\>"},
+          {"71"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[10037, 180], 71}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[844, 15], 0}, {
+         Rational[1031, 18], 22}]},
+      ImageSizeCache->{{119.35905431719024`, 124.29276490306069`}, {
+       111.46513580075015`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"9\"\>"},
+          {"22"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[10219, 180], 22}], 
+      ImageScaled[{0.5, 0}]]}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[2623, 45], 0}, {
+         Rational[593, 10], 5}]},
+      ImageSizeCache->{{127.82647551277299`, 132.76018609864337`}, {
+       112.95872526341677`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\";\"\>"},
+          {"5"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[10583, 180], 5}], 
+      ImageScaled[{0.5, 0}]]}, {}, {}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[187, 3], 0}, {
+         Rational[5701, 90], 1}]},
+      ImageSizeCache->{{144.7613179039384, 149.6950284898088}, {
+       113.31015807816186`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"?\"\>"},
+          {"1"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[11311, 180], 1}], 
+      ImageScaled[{0.5, 0}]]}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, \
+{}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[4079, 45], 0}, {
+         Rational[8249, 90], 77}]},
+      ImageSizeCache->{{263.3052146420964, 268.23892522796683`}, {
+       106.6329345980052, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"[\"\>"},
+          {"77"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1823, 20], 77}], 
+      ImageScaled[{0.5, 0}]]}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[278, 3], 0}, {
+         Rational[8431, 90], 77}]},
+      ImageSizeCache->{{271.77263583767916`, 276.7063464235496}, {
+       106.6329345980052, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"]\"\>"},
+          {"77"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[16771, 180], 77}], 
+      ImageScaled[{0.5, 0}]]}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[4261, 45], 0}, {
+         Rational[957, 10], 1412}]},
+      ImageSizeCache->{{280.2400570332618, 
+       285.17376761913226`}, {-10.657767323167633`, 114.0980162699272}}], 
+     InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"_\"\>"},
+          {"1412"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[3427, 36], 1412}], 
+      ImageScaled[{0.5, 0}]]}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[4352, 45], 0}, {
+         Rational[1759, 18], 428}]},
+      ImageSizeCache->{{288.70747822884454`, 293.641188814715}, {
+       75.7947051041238, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"a\"\>"},
+          {"428"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[5833, 60], 428}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1759, 18], 0}, {
+         Rational[1481, 15], 238}]},
+      ImageSizeCache->{{292.94118882663594`, 297.87489941250635`}, {
+       92.48776380451545, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"b\"\>"},
+          {"238"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[17681, 180], 238}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1481, 15], 0}, {
+         Rational[8977, 90], 289}]},
+      ImageSizeCache->{{297.1748994244273, 302.1086100102977}, {
+       88.00699541651558, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"c\"\>"},
+          {"289"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[17863, 180], 289}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[8977, 90], 0}, {
+         Rational[4534, 45], 523}]},
+      ImageSizeCache->{{301.4086100222186, 306.3423206080891}, {
+       67.44817575392798, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"d\"\>"},
+          {"523"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[401, 4], 523}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[4534, 45], 0}, {
+         Rational[3053, 30], 854}]},
+      ImageSizeCache->{{305.64232062001, 310.5760312058804}, {
+       38.36711033377202, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"e\"\>"},
+          {"854"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[18227, 180], 854}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3053, 30], 0}, {
+         Rational[925, 9], 18}]},
+      ImageSizeCache->{{309.8760312178013, 314.8097418036717}, {
+       111.81656861549524`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"f\"\>"},
+          {"18"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[18409, 180], 18}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[925, 9], 0}, {
+         Rational[9341, 90], 153}]},
+      ImageSizeCache->{{314.10974181559266`, 319.0434524014631}, {
+       99.95571111784855, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"g\"\>"},
+          {"153"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6197, 60], 153}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[9341, 90], 0}, {
+         Rational[524, 5], 502}]},
+      ImageSizeCache->{{318.34345241338406`, 323.2771629992545}, {
+       69.2931980313397, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"h\"\>"},
+          {"502"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[18773, 180], 502}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[524, 5], 0}, {
+         Rational[9523, 90], 287}]},
+      ImageSizeCache->{{322.5771630111754, 327.5108735970459}, {
+       88.18271182388813, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"i\"\>"},
+          {"287"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[3791, 36], 287}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[9523, 90], 0}, {
+         Rational[4807, 45], 7}]},
+      ImageSizeCache->{{326.8108736089668, 331.7445841948372}, {
+       112.78300885604423`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"j\"\>"},
+          {"7"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6379, 60], 7}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[4807, 45], 0}, {
+         Rational[647, 6], 2457}]},
+      ImageSizeCache->{{331.04458420675815`, 
+       335.97829479262856`}, {-102.46959017532166`, 114.0980162699272}}], 
+     InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"k\"\>"},
+          {"2457"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[19319, 180], 2457}],
+       ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[647, 6], 0}, {
+         Rational[4898, 45], 118}]},
+      ImageSizeCache->{{335.2782948045495, 340.2120053904199}, {
+       103.03074824686806`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"l\"\>"},
+          {"118"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[19501, 180], 118}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[4898, 45], 0}, {
+         Rational[9887, 90], 732}]},
+      ImageSizeCache->{{339.51200540234083`, 344.44571598821125`}, {
+       49.085811183497185`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"m\"\>"},
+          {"732"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[2187, 20], 732}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[9887, 90], 0}, {
+         Rational[1663, 15], 703}]},
+      ImageSizeCache->{{343.7457160001322, 348.6794265860026}, {
+       51.63369909039906, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"n\"\>"},
+          {"703"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[3973, 36], 703}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1663, 15], 0}, {
+         Rational[10069, 90], 996}]},
+      ImageSizeCache->{{347.9794265979235, 352.913137183794}, {
+       25.89124541032143, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"o\"\>"},
+          {"996"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[20047, 180], 996}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[10069, 90], 0}, {
+         Rational[1016, 9], 850}]},
+      ImageSizeCache->{{352.2131371957149, 357.14684778158534`}, {
+       38.718543148517114`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"p\"\>"},
+          {"850"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6743, 60], 850}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1016, 9], 0}, {
+         Rational[1139, 10], 949}]},
+      ImageSizeCache->{{356.44684779350627`, 361.38055837937674`}, {
+       30.02058098357621, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"q\"\>"},
+          {"949"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[20411, 180], 949}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1139, 10], 0}, {
+         Rational[5171, 45], 4}]},
+      ImageSizeCache->{{360.68055839129767`, 365.6142689771681}, {
+       113.04658346710305`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"r\"\>"},
+          {"4"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[20593, 180], 4}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[5171, 45], 0}, {
+         Rational[10433, 90], 298}]},
+      ImageSizeCache->{{364.914268989089, 369.84797957495937`}, {
+       87.21627158333914, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"s\"\>"},
+          {"298"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1385, 12], 298}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[10433, 90], 0}, {
+         Rational[1754, 15], 175}]},
+      ImageSizeCache->{{369.1479795868803, 374.08169017275077`}, {
+       98.02283063675057, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"t\"\>"},
+          {"175"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[20957, 180], 175}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1754, 15], 0}, {
+         Rational[2123, 18], 222}]},
+      ImageSizeCache->{{373.3816901846717, 378.3154007705421}, {
+       93.89349506349579, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"u\"\>"},
+          {"222"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[21139, 180], 222}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[2123, 18], 0}, {
+         Rational[5353, 45], 937}]},
+      ImageSizeCache->{{377.61540078246304`, 382.54911136833346`}, {
+       31.074879427811467`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"v\"\>"},
+          {"937"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[2369, 20], 937}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[5353, 45], 0}, {
+         Rational[3599, 30], 194}]},
+      ImageSizeCache->{{381.8491113802544, 386.78282196612486`}, {
+       96.3535247667114, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"w\"\>"},
+          {"194"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[21503, 180], 194}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3599, 30], 0}, {
+         Rational[5444, 45], 369}]},
+      ImageSizeCache->{{386.0828219780458, 391.0165325639162}, {
+       80.97833912161384, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"x\"\>"},
+          {"369"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[4337, 36], 369}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[5444, 45], 0}, {
+         Rational[10979, 90], 19}]},
+      ImageSizeCache->{{390.31653257583713`, 395.2502431617076}, {
+       111.72871041180896`, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"y\"\>"},
+          {"19"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7289, 60], 19}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[10979, 90], 0}, {123, 220}]},
+      ImageSizeCache->{{394.55024317362853`, 399.48395375949895`}, {
+       94.06921147086834, 114.0980162699272}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"z\"\>"},
+          {"220"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[22049, 180], 220}], 
+      ImageScaled[{0.5, 0}]]}}, {}, {}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesOrigin->{32, 0},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  ImageSize->{584.0833333333296, Automatic},
+  PlotRange->{{32, 123}, {All, All}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.1]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{3.569790994491415*^9, 3.569804100101702*^9, 
+  3.569810821559101*^9}]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+The text is probably encrypted separately in the domain of letters and \
+symbols. And considering the pairing citation braket units, the symbols \
+should be uncoded. The numbers are often in brackets, so they should be \
+encrypted within their domain. The text is probably an academic paper \
+downloaded from some website.\
+\>", "Subsection",
+ CellChangeTimes->{{3.569703908062901*^9, 3.5697040484499383`*^9}, {
+  3.569704241254217*^9, 3.5697042759316845`*^9}, {3.5697044867947683`*^9, 
+  3.5697045289469833`*^9}, {3.569704570578146*^9, 3.5697045771558037`*^9}, {
+  3.5697715297871695`*^9, 3.5697715720721693`*^9}, {3.569774033183643*^9, 
+  3.56977405562163*^9}, {3.569791200526415*^9, 3.569791201888415*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{
+  RowBox[{"symbolcode", "=", 
+   RowBox[{"{", "}"}]}], ";", 
+  RowBox[{"lettercode", "=", 
+   RowBox[{"{", "}"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"charcode", "[", 
+        RowBox[{"[", "i", "]"}], "]"}], "<", "90"}], ",", 
+      RowBox[{"symbolcode", "=", 
+       RowBox[{"Append", "[", 
+        RowBox[{"symbolcode", ",", 
+         RowBox[{"charcode", "[", 
+          RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}], ",", 
+      RowBox[{"lettercode", "=", 
+       RowBox[{"Append", "[", 
+        RowBox[{"lettercode", ",", 
+         RowBox[{"charcode", "[", 
+          RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}]}], "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"i", ",", 
+      RowBox[{"Length", "[", "charcode", "]"}]}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"symbol", "=", 
+   RowBox[{"fromcode", "[", "symbolcode", "]"}]}], ";", 
+  RowBox[{"letter", "=", 
+   RowBox[{"fromcode", "[", "lettercode", "]"}]}], ";", 
+  RowBox[{"style", "=", 
+   RowBox[{"{", 
+    RowBox[{"Bold", ",", "15", ",", "Blue"}], "}"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"hist", "[", "symbolcode", "]"}], "\[IndentingNewLine]", 
+ RowBox[{"hist", "[", "lettercode", "]"}]}], "Input",
+ CellChangeTimes->{{3.5696996578268967`*^9, 3.569699737979911*^9}, {
+   3.569699790364149*^9, 3.569699845341646*^9}, {3.5696998941235237`*^9, 
+   3.5696999182749386`*^9}, {3.5697042076038523`*^9, 
+   3.5697042078778796`*^9}, {3.56977731508222*^9, 3.5697773173614483`*^9}, {
+   3.569777424605097*^9, 3.5697774317343836`*^9}, {3.5697897218412476`*^9, 
+   3.5697897225901723`*^9}, {3.569789847789651*^9, 3.5697898564787827`*^9}, {
+   3.5697898916864147`*^9, 3.569789908060415*^9}, {3.569789944598415*^9, 
+   3.5697899539574146`*^9}, {3.569790000921415*^9, 3.5697900084764147`*^9}, {
+   3.569790535130415*^9, 3.5697905366504145`*^9}, {3.569790950072415*^9, 
+   3.569790953348415*^9}, 3.5697911740354147`*^9, {3.569804052952532*^9, 
+   3.5698040706525316`*^9}}],
+
+Cell[BoxData[
+ GraphicsBox[
+  {RGBColor[0.798413061722744, 0.824719615472648, 0.968322270542458], 
+   EdgeForm[Opacity[0.7]], {}, 
+   {RGBColor[0.798413061722744, 0.824719615472648, 0.968322270542458], 
+    EdgeForm[Opacity[0.7]], {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{32, 0}, {
+         Rational[1024, 31], 3}]},
+      ImageSizeCache->{{13.749999970197734`, 24.72412743056759}, {
+       92.81500115602931, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"!\"\>"},
+          {"3"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1008, 31], 3}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1024, 31], 0}, {
+         Rational[1056, 31], 76}]},
+      ImageSizeCache->{{24.02412744248852, 34.99825490285838}, {
+       42.34738453806056, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"\\\"\"\>"},
+          {"76"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1040, 31], 76}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1056, 31], 0}, {
+         Rational[1088, 31], 4}]},
+      ImageSizeCache->{{34.29825491477931, 45.272382375149164`}, {
+       92.12366394208453, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"#\"\>"},
+          {"4"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1072, 31], 4}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1088, 31], 0}, {
+         Rational[1120, 31], 1}]},
+      ImageSizeCache->{{44.57238238707009, 55.54650984744006}, {
+       94.19767558391887, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"$\"\>"},
+          {"1"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1104, 31], 1}], 
+      ImageScaled[{0.5, 0}]]}, {}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1184, 31], 0}, {
+         Rational[1216, 31], 43}]},
+      ImageSizeCache->{{75.39476480394256, 86.36889226431242}, {
+       65.16151259823822, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"'\"\>"},
+          {"43"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1200, 31], 43}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1216, 31], 0}, {
+         Rational[1248, 31], 7}]},
+      ImageSizeCache->{{85.66889227623335, 96.64301973660321}, {
+       90.0496523002502, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"(\"\>"},
+          {"7"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1232, 31], 7}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1248, 31], 0}, {
+         Rational[1280, 31], 7}]},
+      ImageSizeCache->{{95.94301974852414, 106.917147208894}, {
+       90.0496523002502, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\")\"\>"},
+          {"7"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1264, 31], 7}], 
+      ImageScaled[{0.5, 0}]]}, {}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1344, 31], 0}, {
+         Rational[1376, 31], 135}]},
+      ImageSizeCache->{{126.7654021653965, 137.73952962576647`}, {
+       1.5584889153186907`, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\",\"\>"},
+          {"135"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1360, 31], 135}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1376, 31], 0}, {
+         Rational[1408, 31], 16}]},
+      ImageSizeCache->{{137.0395296376874, 148.01365709805725`}, {
+       83.8276173747472, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"-\"\>"},
+          {"16"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1392, 31], 16}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1408, 31], 0}, {
+         Rational[1440, 31], 261}]},
+      ImageSizeCache->{{147.31365710997818`, 
+       158.28778457034804`}, {-85.55000004172328, 95.58901278594271}}], 
+     InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\".\"\>"},
+          {"261"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1424, 31], 261}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1440, 31], 0}, {
+         Rational[1472, 31], 5}]},
+      ImageSizeCache->{{157.58778458226897`, 168.56191204263882`}, {
+       91.43232672813976, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"/\"\>"},
+          {"5"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1456, 31], 5}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1472, 31], 0}, {
+         Rational[1504, 31], 29}]},
+      ImageSizeCache->{{167.86191205455975`, 178.8360395149296}, {
+       74.8402335934651, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"0\"\>"},
+          {"29"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {48, 29}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1504, 31], 0}, {
+         Rational[1536, 31], 31}]},
+      ImageSizeCache->{{178.13603952685054`, 189.1101669872204}, {
+       73.45755916557555, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"1\"\>"},
+          {"31"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1520, 31], 31}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1536, 31], 0}, {
+         Rational[1568, 31], 20}]},
+      ImageSizeCache->{{188.41016699914132`, 199.38429445951118`}, {
+       81.0622685189681, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"2\"\>"},
+          {"20"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1552, 31], 20}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1568, 31], 0}, {
+         Rational[1600, 31], 23}]},
+      ImageSizeCache->{{198.6842944714321, 209.65842193180197`}, {
+       78.98825687713376, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"3\"\>"},
+          {"23"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1584, 31], 23}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1600, 31], 0}, {
+         Rational[1632, 31], 19}]},
+      ImageSizeCache->{{208.9584219437229, 219.9325494040928}, {
+       81.75360573291287, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"4\"\>"},
+          {"19"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1616, 31], 19}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1632, 31], 0}, {
+         Rational[1664, 31], 42}]},
+      ImageSizeCache->{{219.23254941601374`, 230.20667687638365`}, {
+       65.852849812183, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"5\"\>"},
+          {"42"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1648, 31], 42}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1664, 31], 0}, {
+         Rational[1696, 31], 101}]},
+      ImageSizeCache->{{229.50667688830458`, 240.48080434867438`}, {
+       25.06395418944112, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"6\"\>"},
+          {"101"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1680, 31], 101}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1696, 31], 0}, {
+         Rational[1728, 31], 50}]},
+      ImageSizeCache->{{239.7808043605953, 250.75493182096523`}, {
+       60.32215210062477, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"7\"\>"},
+          {"50"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1712, 31], 50}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1728, 31], 0}, {
+         Rational[1760, 31], 71}]},
+      ImageSizeCache->{{250.05493183288615`, 261.02905929325607`}, {
+       45.804070607784446`, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"8\"\>"},
+          {"71"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1744, 31], 71}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1760, 31], 0}, {
+         Rational[1792, 31], 22}]},
+      ImageSizeCache->{{260.329059305177, 271.3031867655468}, {
+       79.67959409107854, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"9\"\>"},
+          {"22"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1776, 31], 22}], 
+      ImageScaled[{0.5, 0}]]}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1824, 31], 0}, {
+         Rational[1856, 31], 5}]},
+      ImageSizeCache->{{280.87731424975857`, 291.85144171012837`}, {
+       91.43232672813976, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\";\"\>"},
+          {"5"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1840, 31], 5}], 
+      ImageScaled[{0.5, 0}]]}, {}, {}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1952, 31], 0}, {64, 1}]},
+      ImageSizeCache->{{321.9738241389217, 332.9479515992916}, {
+       94.19767558391887, 95.58901278594271}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"?\"\>"},
+          {"1"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[1968, 31], 1}], 
+      ImageScaled[{0.5, 0}]]}}, {}, {}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesOrigin->{32, 0},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  ImageSize->{486.5476162741604, Automatic},
+  PlotRange->{{32, 64}, {All, All}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.1]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{
+  3.5697728446621695`*^9, 3.5697749524739833`*^9, 3.5697751586165953`*^9, 
+   3.569777502185338*^9, 3.5697851316881113`*^9, 3.5697872483274975`*^9, 
+   3.5697882710330987`*^9, 3.5697883452460985`*^9, 3.5697883983690987`*^9, 
+   3.5697887176910987`*^9, 3.569789351441061*^9, 3.56978943911875*^9, {
+   3.569789861217308*^9, 3.5697899550704145`*^9}, 3.569790010729415*^9, 
+   3.5697910395154147`*^9, 3.5698041030079927`*^9, 3.569810825153101*^9}],
+
+Cell[BoxData[
+ GraphicsBox[
+  {RGBColor[0.798413061722744, 0.824719615472648, 0.968322270542458], 
+   EdgeForm[Opacity[0.7]], {}, 
+   {RGBColor[0.798413061722744, 0.824719615472648, 0.968322270542458], 
+    EdgeForm[Opacity[0.7]], {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{90, 0}, {
+         Rational[2913, 32], 77}]},
+      ImageSizeCache->{{17.749999970197564`, 28.25382625363693}, {
+       87.61354058539058, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"[\"\>"},
+          {"77"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[5793, 64], 77}], 
+      ImageScaled[{0.5, 0}]]}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1473, 16], 0}, {
+         Rational[2979, 32], 77}]},
+      ImageSizeCache->{{37.35765256091804, 47.86147884435729}, {
+       87.61354058539058, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"]\"\>"},
+          {"77"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[5925, 64], 77}], 
+      ImageScaled[{0.5, 0}]]}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[753, 8], 0}, {
+         Rational[3045, 32], 1412}]},
+      ImageSizeCache->{{56.96530515163852, 
+       67.46913143507777}, {-8.95718493444005, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"_\"\>"},
+          {"1412"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6057, 64], 1412}], 
+      ImageScaled[{0.5, 0}]]}, {}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1539, 16], 0}, {
+         Rational[3111, 32], 428}]},
+      ImageSizeCache->{{76.57295774235888, 87.07678402579825}, {
+       62.22303522399691, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"a\"\>"},
+          {"428"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6189, 64], 428}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3111, 32], 0}, {
+         Rational[393, 4], 238}]},
+      ImageSizeCache->{{86.37678403771918, 96.88061032115843}, {
+       75.96718342532112, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"b\"\>"},
+          {"238"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6255, 64], 238}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[393, 4], 0}, {
+         Rational[3177, 32], 289}]},
+      ImageSizeCache->{{96.18061033307936, 106.68443661651872`}, {
+       72.27796469759726, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"c\"\>"},
+          {"289"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6321, 64], 289}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3177, 32], 0}, {
+         Rational[1605, 16], 523}]},
+      ImageSizeCache->{{105.98443662843965`, 116.4882629118789}, {
+       55.350961123334805`, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"d\"\>"},
+          {"523"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6387, 64], 523}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1605, 16], 0}, {
+         Rational[3243, 32], 854}]},
+      ImageSizeCache->{{115.78826292379983`, 126.29208920723909`}, {
+       31.407208204185785`, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"e\"\>"},
+          {"854"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6453, 64], 854}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3243, 32], 0}, {
+         Rational[819, 8], 18}]},
+      ImageSizeCache->{{125.59208921916002`, 136.09591550259938`}, {
+       91.88146029001231, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"f\"\>"},
+          {"18"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6519, 64], 18}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[819, 8], 0}, {
+         Rational[3309, 32], 153}]},
+      ImageSizeCache->{{135.3959155145203, 145.89974179795956`}, {
+       82.11588130486089, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"g\"\>"},
+          {"153"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6585, 64], 153}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3309, 32], 0}, {
+         Rational[1671, 16], 502}]},
+      ImageSizeCache->{{145.1997418098805, 155.70356809331975`}, {
+       56.87005118769169, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"h\"\>"},
+          {"502"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6651, 64], 502}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1671, 16], 0}, {
+         Rational[3375, 32], 287}]},
+      ImageSizeCache->{{155.00356810524067`, 165.50739438868004`}, {
+       72.42263994182171, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"i\"\>"},
+          {"287"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6717, 64], 287}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3375, 32], 0}, {
+         Rational[213, 2], 7}]},
+      ImageSizeCache->{{164.80739440060097`, 175.31122068404022`}, {
+       92.67717413324687, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"j\"\>"},
+          {"7"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6783, 64], 7}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[213, 2], 0}, {
+         Rational[3441, 32], 2457}]},
+      ImageSizeCache->{{174.61122069596115`, 
+       185.1150469794004}, {-84.55000004172322, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"k\"\>"},
+          {"2457"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6849, 64], 2457}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3441, 32], 0}, {
+         Rational[1737, 16], 118}]},
+      ImageSizeCache->{{184.41504699132133`, 194.91887327476059`}, {
+       84.64769807878905, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"l\"\>"},
+          {"118"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6915, 64], 118}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1737, 16], 0}, {
+         Rational[3507, 32], 732}]},
+      ImageSizeCache->{{194.21887328668151`, 204.72269957012088`}, {
+       40.232398101878175`, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"m\"\>"},
+          {"732"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[6981, 64], 732}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3507, 32], 0}, {
+         Rational[885, 8], 703}]},
+      ImageSizeCache->{{204.0226995820418, 214.52652586548118`}, {
+       42.33018914313292, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"n\"\>"},
+          {"703"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7047, 64], 703}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[885, 8], 0}, {
+         Rational[3573, 32], 996}]},
+      ImageSizeCache->{{213.8265258774021, 224.33035216084124`}, {
+       21.13526586424875, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"o\"\>"},
+          {"996"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7113, 64], 996}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3573, 32], 0}, {
+         Rational[1803, 16], 850}]},
+      ImageSizeCache->{{223.63035217276217`, 234.13417845620154`}, {
+       31.696558692634717`, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"p\"\>"},
+          {"850"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7179, 64], 850}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1803, 16], 0}, {
+         Rational[3639, 32], 949}]},
+      ImageSizeCache->{{233.43417846812247`, 243.93800475156183`}, {
+       24.535134103523674`, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"q\"\>"},
+          {"949"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7245, 64], 949}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3639, 32], 0}, {
+         Rational[459, 4], 4}]},
+      ImageSizeCache->{{243.23800476348276`, 253.74183104692213`}, {
+       92.89418699958357, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"r\"\>"},
+          {"4"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7311, 64], 4}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[459, 4], 0}, {
+         Rational[3705, 32], 298}]},
+      ImageSizeCache->{{253.04183105884306`, 263.5456573422822}, {
+       71.62692609858716, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"s\"\>"},
+          {"298"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7377, 64], 298}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3705, 32], 0}, {
+         Rational[1869, 16], 175}]},
+      ImageSizeCache->{{262.8456573542031, 273.3494836376425}, {
+       80.52445361839177, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"t\"\>"},
+          {"175"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7443, 64], 175}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1869, 16], 0}, {
+         Rational[3771, 32], 222}]},
+      ImageSizeCache->{{272.6494836495634, 283.1533099330028}, {
+       77.12458537911684, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"u\"\>"},
+          {"222"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7509, 64], 222}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3771, 32], 0}, {
+         Rational[951, 8], 937}]},
+      ImageSizeCache->{{282.4533099449237, 292.95713622836286`}, {
+       25.40318556887047, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"v\"\>"},
+          {"937"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7575, 64], 937}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[951, 8], 0}, {
+         Rational[3837, 32], 194}]},
+      ImageSizeCache->{{292.2571362402838, 302.76096252372315`}, {
+       79.15003879825936, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"w\"\>"},
+          {"194"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7641, 64], 194}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3837, 32], 0}, {
+         Rational[1935, 16], 369}]},
+      ImageSizeCache->{{302.0609625356441, 312.56478881908345`}, {
+       66.49095492861863, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"x\"\>"},
+          {"369"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7707, 64], 369}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[1935, 16], 0}, {
+         Rational[3903, 32], 19}]},
+      ImageSizeCache->{{311.8647888310044, 322.3686151144435}, {
+       91.80912266790008, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"y\"\>"},
+          {"19"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7773, 64], 19}], 
+      ImageScaled[{0.5, 0}]]}, {
+     DynamicBox[{
+       FEPrivate`If[
+        CurrentValue["MouseOver"], 
+        EdgeForm[{
+          GrayLevel[0.5], 
+          AbsoluteThickness[1.5], 
+          Opacity[0.66]}], {}, {}], 
+       RectangleBox[{
+         Rational[3903, 32], 0}, {123, 220}]},
+      ImageSizeCache->{{321.66861512636444`, 332.1724414098038}, {
+       77.26926062334131, 93.88353747611157}}], InsetBox[
+      StyleBox[
+       TagBox[GridBox[{
+          {"\<\"z\"\>"},
+          {"220"}
+         },
+         GridBoxAlignment->{"Columns" -> {{Left}}},
+         GridBoxItemSize->{
+          "Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+        "Column"],
+       StripOnInput->False,
+       FrontFaceColor->GrayLevel[0],
+       BackFaceColor->GrayLevel[0],
+       GraphicsColor->GrayLevel[0],
+       FontColor->GrayLevel[0]], Offset[{0, 4}, {Rational[7839, 64], 220}], 
+      ImageScaled[{0.5, 0}]]}}, {}, {}},
+  AspectRatio->NCache[GoldenRatio^(-1), 0.6180339887498948],
+  Axes->{True, True},
+  AxesOrigin->{90, 0},
+  FrameTicks->{{Automatic, Automatic}, {Automatic, Automatic}},
+  ImageSize->{485.29761627415587`, Automatic},
+  PlotRange->{{90, 123}, {All, All}},
+  PlotRangePadding->{{
+     Scaled[0.02], 
+     Scaled[0.02]}, {
+     Scaled[0.02], 
+     Scaled[0.1]}},
+  Ticks->{Automatic, Automatic}]], "Output",
+ CellChangeTimes->{
+  3.5697728446621695`*^9, 3.5697749524739833`*^9, 3.5697751586165953`*^9, 
+   3.569777502185338*^9, 3.5697851316881113`*^9, 3.5697872483274975`*^9, 
+   3.5697882710330987`*^9, 3.5697883452460985`*^9, 3.5697883983690987`*^9, 
+   3.5697887176910987`*^9, 3.569789351441061*^9, 3.56978943911875*^9, {
+   3.569789861217308*^9, 3.5697899550704145`*^9}, 3.569790010729415*^9, 
+   3.5697910395154147`*^9, 3.5698041030079927`*^9, 3.5698108255511007`*^9}]
+}, Open  ]],
+
+Cell[BoxData[
+ RowBox[{
+  RowBox[{"statistic", "[", "repeat_", "]"}], ":=", 
+  RowBox[{"(", 
+   RowBox[{
+    RowBox[{"Tgram0", "=", 
+     RowBox[{"Tally", "[", 
+      RowBox[{"Table", "[", 
+       RowBox[{
+        RowBox[{"StringJoin", "[", 
+         RowBox[{"Table", "[", 
+          RowBox[{
+           RowBox[{"char", "[", 
+            RowBox[{"[", 
+             RowBox[{"i", "+", "r", "-", "1"}], "]"}], "]"}], ",", 
+           RowBox[{"{", 
+            RowBox[{"r", ",", "repeat"}], "}"}]}], "]"}], "]"}], ",", 
+        RowBox[{"{", 
+         RowBox[{"i", ",", 
+          RowBox[{
+           RowBox[{"Length", "[", "char", "]"}], "-", "repeat"}]}], "}"}]}], 
+       "]"}], "]"}]}], ";", 
+    RowBox[{"Tgram", "=", 
+     RowBox[{"{", "}"}]}], ";", 
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"If", "[", "\[IndentingNewLine]", 
+       RowBox[{
+        RowBox[{
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"repeat", "\[GreaterEqual]", "0"}], "&&", 
+           RowBox[{"repeat", "<", "2"}], "&&", 
+           RowBox[{
+            RowBox[{"Tgram0", "[", 
+             RowBox[{"[", 
+              RowBox[{"i", ",", "2"}], "]"}], "]"}], ">", "200"}]}], ")"}], "||",
+          "\[IndentingNewLine]", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"repeat", "\[Equal]", "2"}], "&&", 
+           RowBox[{
+            RowBox[{"Tgram0", "[", 
+             RowBox[{"[", 
+              RowBox[{"i", ",", "2"}], "]"}], "]"}], ">", "125"}]}], ")"}], "||",
+          "\[IndentingNewLine]", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"repeat", "\[Equal]", "3"}], "&&", 
+           RowBox[{
+            RowBox[{"Tgram0", "[", 
+             RowBox[{"[", 
+              RowBox[{"i", ",", "2"}], "]"}], "]"}], ">", "50"}]}], ")"}], "||",
+          "\[IndentingNewLine]", 
+         RowBox[{"(", 
+          RowBox[{
+           RowBox[{"repeat", "\[Equal]", "4"}], "&&", 
+           RowBox[{"repeat", "<", "5"}], "&&", 
+           RowBox[{
+            RowBox[{"Tgram0", "[", 
+             RowBox[{"[", 
+              RowBox[{"i", ",", "2"}], "]"}], "]"}], ">", "35"}]}], ")"}]}], 
+        ",", "\[IndentingNewLine]", 
+        RowBox[{"Tgram", "=", 
+         RowBox[{"Append", "[", 
+          RowBox[{"Tgram", ",", 
+           RowBox[{"Tgram0", "[", 
+            RowBox[{"[", "i", "]"}], "]"}]}], "]"}]}]}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"i", ",", 
+        RowBox[{"Length", "[", "Tgram0", "]"}]}], "}"}]}], "]"}], ";", 
+    RowBox[{"Sort", "[", 
+     RowBox[{"Tgram", ",", 
+      RowBox[{
+       RowBox[{
+        RowBox[{"#1", "[", 
+         RowBox[{"[", "2", "]"}], "]"}], ">", 
+        RowBox[{"#2", "[", 
+         RowBox[{"[", "2", "]"}], "]"}]}], "&"}]}], "]"}]}], ")"}]}]], "Input"],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"Print", "[", 
+  RowBox[{
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<\[LightBulb] Normal English:\\n\>\"", ",", "style"}], "]"}], 
+   ",", 
+   RowBox[{"Column", "[", 
+    RowBox[{"{", 
+     RowBox[{
+      RowBox[{"MatrixForm", "[", 
+       RowBox[{"{", 
+        RowBox[{
+         RowBox[{"{", 
+          RowBox[{
+          "\"\<e\>\"", ",", "\"\<t\>\"", ",", "\"\<r\>\"", ",", "\"\<n\>\"", 
+           ",", "\"\<i\>\"", ",", "\"\<o\>\"", ",", "\"\<a\>\"", ",", 
+           "\"\<s\>\""}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{
+          "\"\<th\>\"", ",", "\"\<he\>\"", ",", "\"\<in\>\"", ",", 
+           "\"\<er\>\"", ",", "\"\<an\>\"", ",", " ", "\"\<re\>\"", ",", " ", 
+           "\"\<nd\>\"", ",", " ", "\"\<at\>\""}], "}"}], ",", " ", 
+         RowBox[{"{", 
+          RowBox[{
+          "\"\<the\>\"", ",", "\"\<and\>\"", ",", "\"\<tha\>\"", ",", 
+           "\"\<ion\>\"", ",", "\"\<ing\>\"", ",", " ", "\"\<ion\>\"", ",", 
+           "\"\<tio\>\"", ",", "\"\<for\>\""}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+          "\"\<that\>\"", ",", "\"\<with\>\"", ",", "\"\<this\>\"", ",", 
+           "\"\<from\>\"", ",", "\"\<have\>\"", ",", "\"\<they\>\"", ",", 
+           "\"\<were\>\"", ",", "\"\<been\>\""}], "}"}], ",", 
+         RowBox[{"{", 
+          RowBox[{
+          "\"\<which\>\"", ",", "\"\<their\>\"", ",", "\"\<there\>\"", ",", 
+           "\"\<\>\"", ",", "\"\<\>\"", ",", "\"\<\>\"", ",", "\"\<\>\"", 
+           ",", "\"\<\>\""}], "}"}]}], "}"}], "]"}], ",", 
+      RowBox[{"MatrixForm", "[", GridBox[{
+         {"\"\<Frequent:\>\"", "\"\<ss\>\"", "\"\<ll\>\"", "\"\<oo\>\"", 
+          "\"\<ee\>\"", "\"\<nn\>\"", "\"\<pp\>\""},
+         {"\"\<Hardly:\>\"", "\"\<aa\>\"", "\"\<yy\>\"", "\"\<uu\>\"", 
+          "\"\<\>\"", "\"\<\>\"", "\"\<\>\""}
+        }], "]"}]}], "}"}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"double", "=", 
+   RowBox[{"{", "}"}]}], ";", 
+  RowBox[{"Print", "[", 
+   RowBox[{
+    RowBox[{"Style", "[", 
+     RowBox[{"\"\<\[LightBulb] Text Statistics:\\n\>\"", ",", "style"}], 
+     "]"}], ",", 
+    RowBox[{"Column", "[", 
+     RowBox[{"Table", "[", 
+      RowBox[{
+       RowBox[{"MatrixForm", "[", 
+        RowBox[{"Transpose", "[", 
+         RowBox[{"statistic", "[", "t", "]"}], "]"}], "]"}], ",", 
+       RowBox[{"{", 
+        RowBox[{"t", ",", "4"}], "}"}]}], "]"}], "]"}]}], 
+   "]"}]}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"Table", "[", 
+   RowBox[{
+    RowBox[{"If", "[", 
+     RowBox[{
+      RowBox[{
+       RowBox[{"char", "[", 
+        RowBox[{"[", 
+         RowBox[{"i", "+", "1"}], "]"}], "]"}], "\[Equal]", 
+       RowBox[{"char", "[", 
+        RowBox[{"[", "i", "]"}], "]"}]}], ",", 
+      RowBox[{"double", "=", 
+       RowBox[{"Append", "[", 
+        RowBox[{"double", ",", 
+         RowBox[{"StringJoin", "[", 
+          RowBox[{"{", 
+           RowBox[{
+            RowBox[{"char", "[", 
+             RowBox[{"[", "i", "]"}], "]"}], ",", 
+            RowBox[{"char", "[", 
+             RowBox[{"[", "i", "]"}], "]"}]}], "}"}], "]"}]}], "]"}]}]}], 
+     "]"}], ",", 
+    RowBox[{"{", 
+     RowBox[{"i", ",", 
+      RowBox[{
+       RowBox[{"Length", "[", "char", "]"}], "-", "1"}]}], "}"}]}], "]"}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", 
+  RowBox[{"\"\<Repeating: \>\"", ",", 
+   RowBox[{"MatrixForm", "[", 
+    RowBox[{"Transpose", "[", 
+     RowBox[{"Tally", "[", "double", "]"}], "]"}], "]"}]}], "]"}]}], "Input",
+ CellChangeTimes->{{3.5696980711375847`*^9, 3.569698071475585*^9}, {
+   3.569698145635585*^9, 3.5696981459065847`*^9}, {3.5696982709815845`*^9, 
+   3.569698283319585*^9}, {3.569698470713585*^9, 3.5696984895595846`*^9}, {
+   3.569698528807006*^9, 3.569698536972822*^9}, {3.5696985953606606`*^9, 
+   3.569698614020526*^9}, 3.5697005123133364`*^9, 3.5697005764197464`*^9, {
+   3.5697029669858027`*^9, 3.5697029687719812`*^9}, {3.5697089673273573`*^9, 
+   3.5697089921903577`*^9}, {3.569771726212169*^9, 3.569771978028169*^9}, {
+   3.5697720213621693`*^9, 3.5697720288791695`*^9}, {3.569772060899169*^9, 
+   3.5697720660371695`*^9}, {3.5697721141251693`*^9, 
+   3.5697721149261694`*^9}, {3.5697722239451694`*^9, 
+   3.5697722259071693`*^9}, {3.5697722648931694`*^9, 3.569772267580169*^9}, {
+   3.569772313179169*^9, 3.5697723344851694`*^9}, {3.5697723721381693`*^9, 
+   3.569772393509169*^9}, {3.5697724900911694`*^9, 3.569772494491169*^9}, {
+   3.5697725284261694`*^9, 3.5697726519261694`*^9}, {3.5697729130591693`*^9, 
+   3.569772918531169*^9}, {3.569773574215169*^9, 3.5697735996881695`*^9}, 
+   3.569773671300169*^9, {3.5697737205041695`*^9, 3.5697737388911734`*^9}, {
+   3.5697738009623938`*^9, 3.569773856707821*^9}, {3.569773917449244*^9, 
+   3.5697739217248077`*^9}, {3.5697740641401854`*^9, 
+   3.5697740835269995`*^9}, {3.5697743901647577`*^9, 
+   3.5697744134790893`*^9}, {3.569774444009142*^9, 3.5697745487876186`*^9}, {
+   3.5697748187986174`*^9, 3.56977482242898*^9}, {3.569775215604294*^9, 
+   3.569775271233856*^9}, {3.569777691348137*^9, 3.5697777144491367`*^9}, {
+   3.569777760485137*^9, 3.569777874334137*^9}, {3.569785815040183*^9, 
+   3.5697858385515337`*^9}, {3.569785869906669*^9, 3.569785873274006*^9}, {
+   3.5697859109247704`*^9, 3.5697859283875165`*^9}, {3.5697859769373713`*^9, 
+   3.5697860384565225`*^9}, {3.5697860700916853`*^9, 3.569786243763051*^9}, {
+   3.569788246108099*^9, 3.569788246525099*^9}, {3.5697884602440987`*^9, 
+   3.569788469639099*^9}, {3.569788501785099*^9, 3.5697885030980988`*^9}, {
+   3.5697889687902007`*^9, 3.569788970334611*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"\[LightBulb] Normal English:\\n\"\>",
+    StripOnInput->False,
+    FrontFaceColor->RGBColor[0, 0, 1],
+    BackFaceColor->RGBColor[0, 0, 1],
+    GraphicsColor->RGBColor[0, 0, 1],
+    FontSize->15,
+    FontWeight->Bold,
+    FontColor->RGBColor[0, 0, 1]], "\[InvisibleSpace]", 
+   TagBox[GridBox[{
+      {
+       TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+           {"\<\"e\"\>", "\<\"t\"\>", "\<\"r\"\>", "\<\"n\"\>", "\<\"i\"\>", \
+"\<\"o\"\>", "\<\"a\"\>", "\<\"s\"\>"},
+           {"\<\"th\"\>", "\<\"he\"\>", "\<\"in\"\>", "\<\"er\"\>", "\<\"an\"\
+\>", "\<\"re\"\>", "\<\"nd\"\>", "\<\"at\"\>"},
+           {"\<\"the\"\>", "\<\"and\"\>", "\<\"tha\"\>", "\<\"ion\"\>", \
+"\<\"ing\"\>", "\<\"ion\"\>", "\<\"tio\"\>", "\<\"for\"\>"},
+           {"\<\"that\"\>", "\<\"with\"\>", "\<\"this\"\>", "\<\"from\"\>", "\
+\<\"have\"\>", "\<\"they\"\>", "\<\"were\"\>", "\<\"been\"\>"},
+           {"\<\"which\"\>", "\<\"their\"\>", "\<\"there\"\>", "\<\"\"\>", \
+"\<\"\"\>", "\<\"\"\>", "\<\"\"\>", "\<\"\"\>"}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.7]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+        Function[BoxForm`e$, 
+         MatrixForm[BoxForm`e$]]]},
+      {
+       TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+           {"\<\"Frequent:\"\>", "\<\"ss\"\>", "\<\"ll\"\>", "\<\"oo\"\>", \
+"\<\"ee\"\>", "\<\"nn\"\>", "\<\"pp\"\>"},
+           {"\<\"Hardly:\"\>", "\<\"aa\"\>", "\<\"yy\"\>", "\<\"uu\"\>", \
+"\<\"\"\>", "\<\"\"\>", "\<\"\"\>"}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.7]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+        Function[BoxForm`e$, 
+         MatrixForm[BoxForm`e$]]]}
+     },
+     GridBoxAlignment->{"Columns" -> {{Left}}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    "Column"]}],
+  SequenceForm[
+   Style["\[LightBulb] Normal English:\n", {Bold, 15, 
+     RGBColor[0, 0, 1]}], 
+   Column[{
+     MatrixForm[{{"e", "t", "r", "n", "i", "o", "a", "s"}, {
+       "th", "he", "in", "er", "an", "re", "nd", "at"}, {
+       "the", "and", "tha", "ion", "ing", "ion", "tio", "for"}, {
+       "that", "with", "this", "from", "have", "they", "were", "been"}, {
+       "which", "their", "there", "", "", "", "", ""}}], 
+     MatrixForm[{{"Frequent:", "ss", "ll", "oo", "ee", "nn", "pp"}, {
+       "Hardly:", "aa", "yy", "uu", "", "", ""}}]}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.569786039945671*^9, 3.5697861282735033`*^9, {3.5697861605617313`*^9, 
+   3.5697862443171062`*^9}, 3.569787252127877*^9, {3.569788247573099*^9, 
+   3.569788297669099*^9}, 3.569788347946099*^9, 3.569788400988099*^9, {
+   3.569788450198099*^9, 3.569788470268099*^9}, 3.569788718502299*^9, 
+   3.5697889746246386`*^9, 3.569789352091866*^9, 3.5697894399614973`*^9, 
+   3.5698041100857005`*^9, 3.5698108295971007`*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"\[LightBulb] Text Statistics:\\n\"\>",
+    StripOnInput->False,
+    FrontFaceColor->RGBColor[0, 0, 1],
+    BackFaceColor->RGBColor[0, 0, 1],
+    GraphicsColor->RGBColor[0, 0, 1],
+    FontSize->15,
+    FontWeight->Bold,
+    FontColor->RGBColor[0, 0, 1]], "\[InvisibleSpace]", 
+   TagBox[GridBox[{
+      {
+       TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+           {"\<\"k\"\>", "\<\"_\"\>", "\<\"o\"\>", "\<\"q\"\>", "\<\"v\"\>", \
+"\<\"e\"\>", "\<\"p\"\>", "\<\"m\"\>", "\<\"n\"\>", "\<\"d\"\>", "\<\"h\"\>", \
+"\<\"a\"\>", "\<\"x\"\>", "\<\"s\"\>", "\<\"c\"\>", "\<\"i\"\>", "\<\".\"\>", \
+"\<\"b\"\>", "\<\"u\"\>", "\<\"z\"\>"},
+           {"2456", "1412", "996", "949", "937", "854", "850", "732", "703", 
+            "523", "502", "428", "369", "298", "289", "287", "261", "238", 
+            "222", "220"}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.7]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+        Function[BoxForm`e$, 
+         MatrixForm[BoxForm`e$]]]},
+      {
+       TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+           {"\<\"_k\"\>", "\<\"ko\"\>", "\<\"kv\"\>", "\<\"od\"\>", "\<\"ep\"\
+\>", "\<\"d_\"\>", "\<\"nk\"\>", "\<\"ak\"\>", "\<\"_m\"\>", "\<\"qp\"\>", \
+"\<\"pk\"\>", "\<\"ok\"\>", "\<\"kn\"\>", "\<\"ku\"\>", "\<\"kq\"\>", "\<\"pc\
+\"\>", "\<\"mk\"\>", "\<\"_a\"\>", "\<\"vp\"\>", "\<\"o_\"\>", "\<\"vn\"\>"},
+           {"403", "355", "286", "282", "268", "258", "243", "210", "202", 
+            "192", "189", "164", "160", "150", "149", "144", "142", "139", 
+            "135", "128", "126"}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.7]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+        Function[BoxForm`e$, 
+         MatrixForm[BoxForm`e$]]]},
+      {
+       TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+           {"\<\"kod\"\>", "\<\"od_\"\>", "\<\"d_k\"\>", "\<\"_ak\"\>", \
+"\<\"epc\"\>", "\<\"pck\"\>", "\<\"_mk\"\>", "\<\"koq\"\>", "\<\"kvk\"\>", \
+"\<\"oqk\"\>", "\<\"qpk\"\>", "\<\"kep\"\>", "\<\"vnk\"\>", "\<\"kqb\"\>", \
+"\<\"qbk\"\>", "\<\"kvp\"\>", "\<\"kvn\"\>", "\<\"kuv\"\>", "\<\"epk\"\>", \
+"\<\"ako\"\>", "\<\"mex\"\>"},
+           {"239", "205", "192", "117", "115", "107", "86", "85", "84", "84", 
+            "73", "71", "69", "64", "59", "58", "53", "52", "52", "51", "51"}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.7]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+        Function[BoxForm`e$, 
+         MatrixForm[BoxForm`e$]]]},
+      {
+       TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+           {"\<\"kod_\"\>", "\<\"od_k\"\>", "\<\"epck\"\>", "\<\"koqk\"\>", "\
+\<\"kqbk\"\>", "\<\"mexg\"\>", "\<\"kmex\"\>", "\<\"mqhh\"\>", \
+"\<\"kuvn\"\>", "\<\"uvnk\"\>", "\<\"kvpa\"\>", "\<\"vpak\"\>", \
+"\<\"gmqh\"\>", "\<\"xgmq\"\>", "\<\"exgm\"\>"},
+           {"190", "178", "90", "80", "59", "48", "45", "44", "42", "40", 
+            "39", "38", "38", "38", "36"}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.7]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+        Function[BoxForm`e$, 
+         MatrixForm[BoxForm`e$]]]}
+     },
+     GridBoxAlignment->{"Columns" -> {{Left}}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    "Column"]}],
+  SequenceForm[
+   Style["\[LightBulb] Text Statistics:\n", {Bold, 15, 
+     RGBColor[0, 0, 1]}], 
+   Column[{
+     MatrixForm[{{
+       "k", "_", "o", "q", "v", "e", "p", "m", "n", "d", "h", "a", "x", "s", 
+        "c", "i", ".", "b", "u", "z"}, {2456, 1412, 996, 949, 937, 854, 850, 
+       732, 703, 523, 502, 428, 369, 298, 289, 287, 261, 238, 222, 220}}], 
+     MatrixForm[{{
+       "_k", "ko", "kv", "od", "ep", "d_", "nk", "ak", "_m", "qp", "pk", "ok",
+         "kn", "ku", "kq", "pc", "mk", "_a", "vp", "o_", "vn"}, {403, 355, 
+       286, 282, 268, 258, 243, 210, 202, 192, 189, 164, 160, 150, 149, 144, 
+       142, 139, 135, 128, 126}}], 
+     MatrixForm[{{
+       "kod", "od_", "d_k", "_ak", "epc", "pck", "_mk", "koq", "kvk", "oqk", 
+        "qpk", "kep", "vnk", "kqb", "qbk", "kvp", "kvn", "kuv", "epk", "ako", 
+        "mex"}, {239, 205, 192, 117, 115, 107, 86, 85, 84, 84, 73, 71, 69, 64,
+        59, 58, 53, 52, 52, 51, 51}}], 
+     MatrixForm[{{
+       "kod_", "od_k", "epck", "koqk", "kqbk", "mexg", "kmex", "mqhh", "kuvn",
+         "uvnk", "kvpa", "vpak", "gmqh", "xgmq", "exgm"}, {190, 178, 90, 80, 
+       59, 48, 45, 44, 42, 40, 39, 38, 38, 38, 36}}]}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.569786039945671*^9, 3.5697861282735033`*^9, {3.5697861605617313`*^9, 
+   3.5697862443171062`*^9}, 3.569787252127877*^9, {3.569788247573099*^9, 
+   3.569788297669099*^9}, 3.569788347946099*^9, 3.569788400988099*^9, {
+   3.569788450198099*^9, 3.569788470268099*^9}, 3.569788718502299*^9, 
+   3.5697889746246386`*^9, 3.569789352091866*^9, 3.5697894399614973`*^9, 
+   3.5698041100857005`*^9, 3.5698108299561005`*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{"\<\"Repeating: \"\>", "\[InvisibleSpace]", 
+   TagBox[
+    RowBox[{"(", "\[NoBreak]", GridBox[{
+       {"\<\"kk\"\>", "\<\"qq\"\>", "\<\"hh\"\>", "\<\"..\"\>", "\<\"mm\"\>", \
+"\<\"ll\"\>", "\<\"pp\"\>", "\<\"__\"\>", "\<\"66\"\>", "\<\"xx\"\>", "\<\"bb\
+\"\>", "\<\"oo\"\>", "\<\"77\"\>", "\<\"nn\"\>", "\<\"ii\"\>", "\<\"88\"\>", \
+"\<\"cc\"\>", "\<\"aa\"\>", "\<\"00\"\>", "\<\"11\"\>", "\<\"99\"\>", "\<\"22\
+\"\>", "\<\"33\"\>"},
+       {"5", "47", "93", "12", "13", "4", "30", "32", "40", "9", "10", "16", 
+        "6", "16", "5", "1", "4", "3", "1", "1", "1", "1", "1"}
+      },
+      GridBoxAlignment->{
+       "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+        "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+      GridBoxSpacings->{"Columns" -> {
+          Offset[0.27999999999999997`], {
+           Offset[0.7]}, 
+          Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+          Offset[0.2], {
+           Offset[0.4]}, 
+          Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+    Function[BoxForm`e$, 
+     MatrixForm[BoxForm`e$]]]}],
+  SequenceForm["Repeating: ", 
+   MatrixForm[{{
+     "kk", "qq", "hh", "..", "mm", "ll", "pp", "__", "66", "xx", "bb", "oo", 
+      "77", "nn", "ii", "88", "cc", "aa", "00", "11", "99", "22", "33"}, {5, 
+     47, 93, 12, 13, 4, 30, 32, 40, 9, 10, 16, 6, 16, 5, 1, 4, 3, 1, 1, 1, 1, 
+     1}}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{
+  3.569786039945671*^9, 3.5697861282735033`*^9, {3.5697861605617313`*^9, 
+   3.5697862443171062`*^9}, 3.569787252127877*^9, {3.569788247573099*^9, 
+   3.569788297669099*^9}, 3.569788347946099*^9, 3.569788400988099*^9, {
+   3.569788450198099*^9, 3.569788470268099*^9}, 3.569788718502299*^9, 
+   3.5697889746246386`*^9, 3.569789352091866*^9, 3.5697894399614973`*^9, 
+   3.5698041100857005`*^9, 3.569810829990101*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell["\<\
+Letter Decryption (Original letters are capitalized for convenience during \
+decryption.)
+In any text, the character \" \" and e should be the most abundant. So \"k\" \
+and \" \" are probably \" \" and \"E\". Then od_ is THE. Regenerate the text \
+and frequency table step by step for next clues. 
+TEnT is TEST. v as a single word should be A. uAS is WAS. Since p is not s \
+then Ip is IN. xSx is CSC. THeS is THIS. Tq is TO. Ob is OF. INc is ING. 
+Now we can move to the text and check some words. SOiETHING is SOMETHING. \
+MOeE is MORE. COM.sTER SECsRITz is COMPUTER SECURITY. NUMwERS is NUMBERS. \
+MAPPEa CORRECThYl is MAPPED CORRECTLY. So l should be \".\". LOtES is LOVES. \
+SPEAgER is SPEAKER. 
+Now only J,Q,X,Z or f,j,r,y are not find. Search the text for f,j,r,y. \
+fANUARY is JANUARY. MAGAjINE is MAGAZINE. rUESTION is Question. Then y is X.\
+\>", "Subsection",
+ CellChangeTimes->{{3.5697739471710663`*^9, 3.5697739719609313`*^9}, {
+   3.569774150911208*^9, 3.5697742262357993`*^9}, {3.569777181384852*^9, 
+   3.5697772199817114`*^9}, {3.5697775893016253`*^9, 
+   3.5697776436861367`*^9}, {3.5697856265363345`*^9, 
+   3.5697856580714874`*^9}, {3.569785712143894*^9, 3.569785733296009*^9}, {
+   3.5697871283855047`*^9, 3.5697871316588316`*^9}, 3.569804565408228*^9, {
+   3.5698079918708544`*^9, 3.5698080095636234`*^9}, {3.569810746752101*^9, 
+   3.569810766250101*^9}, {3.569810869167101*^9, 3.569810917960101*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"Print", "[", 
+  RowBox[{
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<\[LightBulb] Codebook:\\n\>\"", ",", "style"}], "]"}], ",", 
+   RowBox[{"MatrixForm", "[", 
+    RowBox[{"(*", 
+     RowBox[{
+     "Original", " ", "letters", " ", "are", " ", "capitalized", " ", "for", 
+      " ", "convenience", " ", "during", " ", 
+      RowBox[{"decryption", "."}]}], "*)"}], 
+    RowBox[{"codebook", "=", 
+     RowBox[{"(", GridBox[{
+        {"\"\<A\>\"", "\"\<B\>\"", "\"\<C\>\"", "\"\<D\>\"", "\"\<E\>\"", 
+         "\"\<F\>\"", "\"\<G\>\"", "\"\<H\>\"", "\"\<I\>\"", "\"\<J\>\"", 
+         "\"\<K\>\"", "\"\<L\>\"", "\"\<M\>\"", "\"\<N\>\"", "\"\<O\>\"", 
+         "\"\<P\>\"", "\"\<Q\>\"", "\"\<R\>\"", "\"\<S\>\"", "\"\<T\>\"", 
+         "\"\<U\>\"", "\"\<V\>\"", "\"\<W\>\"", "\"\<X\>\"", "\"\<Y\>\"", 
+         "\"\<Z\>\"", "\"\< \>\"", "\"\<.\>\""},
+        {"\"\<v\>\"", "\"\<w\>\"", "\"\<x\>\"", "\"\<a\>\"", "\"\< \>\"", 
+         "\"\<b\>\"", "\"\<c\>\"", "\"\<d\>\"", "\"\<e\>\"", "\"\<f\>\"", 
+         "\"\<g\>\"", "\"\<h\>\"", "\"\<i\>\"", "\"\<p\>\"", "\"\<q\>\"", 
+         "\"\<.\>\"", "\"\<r\>\"", "\"\<m\>\"", "\"\<n\>\"", "\"\<o\>\"", 
+         "\"\<s\>\"", "\"\<t\>\"", "\"\<u\>\"", "\"\<y\>\"", "\"\<z\>\"", 
+         "\"\<j\>\"", "\"\<k\>\"", "\"\<l\>\""}
+       }], ")"}]}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"codebookrule", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"codebook", "[", 
+       RowBox[{"[", 
+        RowBox[{"2", ",", "i"}], "]"}], "]"}], "\[Rule]", 
+      RowBox[{"codebook", "[", 
+       RowBox[{"[", 
+        RowBox[{"1", ",", "i"}], "]"}], "]"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", 
+       RowBox[{
+        RowBox[{"Dimensions", "[", "codebook", "]"}], "[", 
+        RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"deL", "=", 
+   RowBox[{"StringReplace", "[", 
+    RowBox[{"en0", ",", "codebookrule"}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"charcode", "=", 
+   RowBox[{"ToCharacterCode", "[", "deL", "]"}]}], ";", 
+  RowBox[{"char", "=", 
+   RowBox[{"fromcode", "[", "charcode", "]"}]}], ";"}], "\[IndentingNewLine]", 
+ RowBox[{"Print", "[", 
+  RowBox[{
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<\[LightBulb] Text Statistics:\\n\>\"", ",", "style"}], "]"}],
+    ",", 
+   RowBox[{"Column", "[", 
+    RowBox[{"Table", "[", 
+     RowBox[{
+      RowBox[{"MatrixForm", "[", 
+       RowBox[{"Transpose", "[", 
+        RowBox[{"statistic", "[", "t", "]"}], "]"}], "]"}], ",", 
+      RowBox[{"{", 
+       RowBox[{"t", ",", "4"}], "}"}]}], "]"}], "]"}]}], 
+  "]"}], "\[IndentingNewLine]", 
+ RowBox[{"deL", ";"}]}], "Input",
+ CellChangeTimes->{{3.569700836240726*^9, 3.5697009565987606`*^9}, {
+   3.5697010682790203`*^9, 3.569701135301317*^9}, {3.5697011767571716`*^9, 
+   3.5697011784450026`*^9}, {3.5697012809447517`*^9, 3.569701482088976*^9}, 
+   3.569701522331976*^9, {3.569701553301976*^9, 3.569701626676976*^9}, {
+   3.5697029999170957`*^9, 3.5697030235534587`*^9}, 3.5697030603211355`*^9, 
+   3.5697031595730596`*^9, {3.5697032423433356`*^9, 3.569703297279829*^9}, {
+   3.569703396929793*^9, 3.56970340480258*^9}, 3.5697035311392126`*^9, {
+   3.56976962932631*^9, 3.569769682232336*^9}, {3.569769929239464*^9, 
+   3.569770184014169*^9}, 3.5697702330441694`*^9, {3.569770317163169*^9, 
+   3.569770324220169*^9}, {3.5697703610791693`*^9, 3.569770372373169*^9}, {
+   3.569770415557169*^9, 3.5697707054331694`*^9}, {3.569770781899169*^9, 
+   3.569770789515169*^9}, {3.5697708238881693`*^9, 3.569770852010169*^9}, {
+   3.569770890477169*^9, 3.569770943285169*^9}, 3.569770986686169*^9, {
+   3.569771019498169*^9, 3.5697711612871695`*^9}, {3.5697712120591693`*^9, 
+   3.5697713412161694`*^9}, {3.5697713743341694`*^9, 
+   3.5697713792101693`*^9}, {3.5697714170921693`*^9, 3.569771441047169*^9}, {
+   3.5697726856651692`*^9, 3.569772686634169*^9}, {3.569772719979169*^9, 
+   3.569772776984169*^9}, {3.569774178848587*^9, 3.5697741805520983`*^9}, {
+   3.56977423137434*^9, 3.5697743032028823`*^9}, {3.5697744199107323`*^9, 
+   3.569774420377779*^9}, 3.569774502553996*^9, {3.569774563995139*^9, 
+   3.569774565538294*^9}, 3.569774835767314*^9, 3.5697750709438295`*^9, {
+   3.569775378155547*^9, 3.569775379126644*^9}, {3.569775506106341*^9, 
+   3.5697755078395147`*^9}, 3.5697874096876316`*^9, 3.5697880432399807`*^9, 
+   3.5698043173164215`*^9, {3.569810793186101*^9, 3.569810812316101*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"\[LightBulb] Codebook:\\n\"\>",
+    StripOnInput->False,
+    FrontFaceColor->RGBColor[0, 0, 1],
+    BackFaceColor->RGBColor[0, 0, 1],
+    GraphicsColor->RGBColor[0, 0, 1],
+    FontSize->15,
+    FontWeight->Bold,
+    FontColor->RGBColor[0, 0, 1]], "\[InvisibleSpace]", 
+   TagBox[
+    RowBox[{"(", "\[NoBreak]", GridBox[{
+       {"\<\"A\"\>", "\<\"B\"\>", "\<\"C\"\>", "\<\"D\"\>", "\<\"E\"\>", \
+"\<\"F\"\>", "\<\"G\"\>", "\<\"H\"\>", "\<\"I\"\>", "\<\"J\"\>", "\<\"K\"\>", \
+"\<\"L\"\>", "\<\"M\"\>", "\<\"N\"\>", "\<\"O\"\>", "\<\"P\"\>", "\<\"Q\"\>", \
+"\<\"R\"\>", "\<\"S\"\>", "\<\"T\"\>", "\<\"U\"\>", "\<\"V\"\>", "\<\"W\"\>", \
+"\<\"X\"\>", "\<\"Y\"\>", "\<\"Z\"\>", "\<\" \"\>", "\<\".\"\>"},
+       {"\<\"v\"\>", "\<\"w\"\>", "\<\"x\"\>", "\<\"a\"\>", "\<\" \"\>", \
+"\<\"b\"\>", "\<\"c\"\>", "\<\"d\"\>", "\<\"e\"\>", "\<\"f\"\>", "\<\"g\"\>", \
+"\<\"h\"\>", "\<\"i\"\>", "\<\"p\"\>", "\<\"q\"\>", "\<\".\"\>", "\<\"r\"\>", \
+"\<\"m\"\>", "\<\"n\"\>", "\<\"o\"\>", "\<\"s\"\>", "\<\"t\"\>", "\<\"u\"\>", \
+"\<\"y\"\>", "\<\"z\"\>", "\<\"j\"\>", "\<\"k\"\>", "\<\"l\"\>"}
+      },
+      GridBoxAlignment->{
+       "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+        "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+      GridBoxSpacings->{"Columns" -> {
+          Offset[0.27999999999999997`], {
+           Offset[0.7]}, 
+          Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+          Offset[0.2], {
+           Offset[0.4]}, 
+          Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+    Function[BoxForm`e$, 
+     MatrixForm[BoxForm`e$]]]}],
+  SequenceForm[
+   Style["\[LightBulb] Codebook:\n", {Bold, 15, 
+     RGBColor[0, 0, 1]}], 
+   MatrixForm[{{
+     "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", 
+      "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z", " ", "."}, {
+     "v", "w", "x", "a", " ", "b", "c", "d", "e", "f", "g", "h", "i", "p", 
+      "q", ".", "r", "m", "n", "o", "s", "t", "u", "y", "z", "j", "k", "l"}}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.569775072706005*^9, 3.5697753830790396`*^9, 
+  3.569775858975624*^9, 3.5697766368314023`*^9, 3.5697851593071117`*^9, 
+  3.5697872562892933`*^9, 3.569788057869444*^9, 3.569788431749099*^9, 
+  3.569789440581311*^9, 3.5698041397576675`*^9, 3.5698107958431005`*^9, 
+  3.5698108356761007`*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"\[LightBulb] Text Statistics:\\n\"\>",
+    StripOnInput->False,
+    FrontFaceColor->RGBColor[0, 0, 1],
+    BackFaceColor->RGBColor[0, 0, 1],
+    GraphicsColor->RGBColor[0, 0, 1],
+    FontSize->15,
+    FontWeight->Bold,
+    FontColor->RGBColor[0, 0, 1]], "\[InvisibleSpace]", 
+   TagBox[GridBox[{
+      {
+       TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+           {"\<\" \"\>", "\<\"E\"\>", "\<\"T\"\>", "\<\"O\"\>", "\<\"A\"\>", \
+"\<\"I\"\>", "\<\"N\"\>", "\<\"R\"\>", "\<\"S\"\>", "\<\"H\"\>", "\<\"L\"\>", \
+"\<\"D\"\>", "\<\"C\"\>", "\<\"U\"\>", "\<\"G\"\>", "\<\"M\"\>", "\<\"P\"\>", \
+"\<\"F\"\>", "\<\"W\"\>", "\<\"Y\"\>"},
+           {"2457", "1412", "996", "949", "937", "854", "850", "732", "703", 
+            "523", "502", "428", "369", "298", "289", "287", "261", "238", 
+            "222", "220"}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.7]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+        Function[BoxForm`e$, 
+         MatrixForm[BoxForm`e$]]]},
+      {
+       TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+           {"\<\"E \"\>", "\<\" T\"\>", "\<\" A\"\>", "\<\"TH\"\>", "\<\"IN\"\
+\>", "\<\"HE\"\>", "\<\"S \"\>", "\<\"D \"\>", "\<\"ER\"\>", "\<\"ON\"\>", \
+"\<\"N \"\>", "\<\"T \"\>", "\<\" S\"\>", "\<\" W\"\>", "\<\" O\"\>", "\<\"NG\
+\"\>", "\<\"R \"\>", "\<\"ED\"\>", "\<\"AN\"\>", "\<\"TE\"\>", "\<\"AS\"\>"},
+           {"403", "354", "286", "282", "268", "258", "243", "210", "202", 
+            "192", "189", "164", "160", "150", "149", "144", "142", "139", 
+            "135", "128", "126"}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.7]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+        Function[BoxForm`e$, 
+         MatrixForm[BoxForm`e$]]]},
+      {
+       TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+           {"\<\" TH\"\>", "\<\"THE\"\>", "\<\"HE \"\>", "\<\"ED \"\>", \
+"\<\"ING\"\>", "\<\"NG \"\>", "\<\"ER \"\>", "\<\" TO\"\>", "\<\" A \"\>", \
+"\<\"TO \"\>", "\<\"ON \"\>", "\<\" IN\"\>", "\<\"AS \"\>", "\<\" OF\"\>", \
+"\<\"OF \"\>", "\<\" AN\"\>", "\<\" AS\"\>", "\<\" WA\"\>", "\<\"IN \"\>", \
+"\<\"D T\"\>", "\<\"RIC\"\>"},
+           {"238", "205", "192", "117", "115", "107", "86", "85", "84", "84", 
+            "73", "71", "69", "64", "59", "58", "53", "52", "52", "51", "51"}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.7]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+        Function[BoxForm`e$, 
+         MatrixForm[BoxForm`e$]]]},
+      {
+       TagBox[
+        RowBox[{"(", "\[NoBreak]", GridBox[{
+           {"\<\" THE\"\>", "\<\"THE \"\>", "\<\"ING \"\>", "\<\" TO \"\>", "\
+\<\" OF \"\>", "\<\"RICK\"\>", "\<\"ROLL\"\>", "\<\" RIC\"\>", "\<\" \
+WAS\"\>", "\<\"WAS \"\>", "\<\" AND\"\>", "\<\"AND \"\>", "\<\"KROL\"\>", "\<\
+\"CKRO\"\>", "\<\"ICKR\"\>"},
+           {"189", "178", "90", "80", "59", "48", "44", "44", "42", "40", 
+            "39", "38", "38", "38", "36"}
+          },
+          
+          GridBoxAlignment->{
+           "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+            "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+          GridBoxSpacings->{"Columns" -> {
+              Offset[0.27999999999999997`], {
+               Offset[0.7]}, 
+              Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+              Offset[0.2], {
+               Offset[0.4]}, 
+              Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+        Function[BoxForm`e$, 
+         MatrixForm[BoxForm`e$]]]}
+     },
+     GridBoxAlignment->{"Columns" -> {{Left}}},
+     GridBoxItemSize->{"Columns" -> {{Automatic}}, "Rows" -> {{Automatic}}}],
+    "Column"]}],
+  SequenceForm[
+   Style["\[LightBulb] Text Statistics:\n", {Bold, 15, 
+     RGBColor[0, 0, 1]}], 
+   Column[{
+     MatrixForm[{{
+       " ", "E", "T", "O", "A", "I", "N", "R", "S", "H", "L", "D", "C", "U", 
+        "G", "M", "P", "F", "W", "Y"}, {2457, 1412, 996, 949, 937, 854, 850, 
+       732, 703, 523, 502, 428, 369, 298, 289, 287, 261, 238, 222, 220}}], 
+     MatrixForm[{{
+       "E ", " T", " A", "TH", "IN", "HE", "S ", "D ", "ER", "ON", "N ", "T ",
+         " S", " W", " O", "NG", "R ", "ED", "AN", "TE", "AS"}, {403, 354, 
+       286, 282, 268, 258, 243, 210, 202, 192, 189, 164, 160, 150, 149, 144, 
+       142, 139, 135, 128, 126}}], 
+     MatrixForm[{{
+       " TH", "THE", "HE ", "ED ", "ING", "NG ", "ER ", " TO", " A ", "TO ", 
+        "ON ", " IN", "AS ", " OF", "OF ", " AN", " AS", " WA", "IN ", "D T", 
+        "RIC"}, {238, 205, 192, 117, 115, 107, 86, 85, 84, 84, 73, 71, 69, 64,
+        59, 58, 53, 52, 52, 51, 51}}], 
+     MatrixForm[{{
+       " THE", "THE ", "ING ", " TO ", " OF ", "RICK", "ROLL", " RIC", " WAS",
+         "WAS ", " AND", "AND ", "KROL", "CKRO", "ICKR"}, {189, 178, 90, 80, 
+       59, 48, 44, 44, 42, 40, 39, 38, 38, 38, 36}}]}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.569775072706005*^9, 3.5697753830790396`*^9, 
+  3.569775858975624*^9, 3.5697766368314023`*^9, 3.5697851593071117`*^9, 
+  3.5697872562892933`*^9, 3.569788057869444*^9, 3.569788431749099*^9, 
+  3.569789440581311*^9, 3.5698041397576675`*^9, 3.5698107958431005`*^9, 
+  3.5698108360671005`*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+
+Cell[CellGroupData[{
+
+Cell[TextData[{
+ "Number Decryption\nAccording to the first paragraphs, 015/315->348/648, \
+7->1, 8670->2013, 7954->198?,  8665->2008. Citation index should go \
+increasingly. So 2->5, 4->7.\nThen I can get ",
+ Cell[BoxData[
+  FormBox[
+   RowBox[{"(", GridBox[{
+      {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"},
+      {"6", "7", "8", "0", "1", "2", "3", 
+       StyleBox["4",
+        FontFamily->"Arial",
+        FontSlant->"Plain",
+        FontColor->RGBColor[0., 0., 0.]], "5", "9"}
+     }], ")"}], TraditionalForm]], "None"]
+}], "Subsection",
+ CellChangeTimes->{{3.569775024710206*^9, 3.5697750327210073`*^9}, {
+   3.569777168014515*^9, 3.5697771687885923`*^9}, {3.569785617707452*^9, 
+   3.569785618662547*^9}, {3.5697856529039707`*^9, 3.5697856542031007`*^9}, 
+   3.5698045687715645`*^9, 3.5698078175074196`*^9, {3.569810942033101*^9, 
+   3.569811040477101*^9}}],
+
+Cell[CellGroupData[{
+
+Cell[BoxData[{
+ RowBox[{"Print", "[", 
+  RowBox[{
+   RowBox[{"Style", "[", 
+    RowBox[{"\"\<\[LightBulb] Codebook:\\n\>\"", ",", "style"}], "]"}], ",", 
+   RowBox[{"MatrixForm", "[", 
+    RowBox[{"codebook", "=", 
+     RowBox[{"(", GridBox[{
+        {"\"\<0\>\"", "\"\<1\>\"", "\"\<2\>\"", "\"\<3\>\"", "\"\<4\>\"", 
+         "\"\<5\>\"", "\"\<6\>\"", "\"\<7\>\"", "\"\<8\>\"", "\"\<9\>\""},
+        {"\"\<6\>\"", "\"\<7\>\"", "\"\<8\>\"", "\"\<0\>\"", "\"\<1\>\"", 
+         "\"\<2\>\"", "\"\<3\>\"", "\"\<4\>\"", "\"\<5\>\"", "\"\<9\>\""}
+       }], ")"}]}], "]"}]}], "]"}], "\[IndentingNewLine]", 
+ RowBox[{
+  RowBox[{"codebookrule", "=", 
+   RowBox[{"Table", "[", 
+    RowBox[{
+     RowBox[{
+      RowBox[{"codebook", "[", 
+       RowBox[{"[", 
+        RowBox[{"2", ",", "i"}], "]"}], "]"}], "\[Rule]", 
+      RowBox[{"codebook", "[", 
+       RowBox[{"[", 
+        RowBox[{"1", ",", "i"}], "]"}], "]"}]}], ",", 
+     RowBox[{"{", 
+      RowBox[{"i", ",", 
+       RowBox[{
+        RowBox[{"Dimensions", "[", "codebook", "]"}], "[", 
+        RowBox[{"[", "2", "]"}], "]"}]}], "}"}]}], "]"}]}], 
+  ";"}], "\[IndentingNewLine]", 
+ RowBox[{"deN", "=", 
+  RowBox[{"StringReplace", "[", 
+   RowBox[{"deL", ",", "codebookrule"}], "]"}]}]}], "Input",
+ CellChangeTimes->{{3.569700836240726*^9, 3.5697009565987606`*^9}, {
+   3.5697010682790203`*^9, 3.569701135301317*^9}, {3.5697011767571716`*^9, 
+   3.5697011784450026`*^9}, {3.5697012809447517`*^9, 3.569701482088976*^9}, 
+   3.569701522331976*^9, {3.569701553301976*^9, 3.569701626676976*^9}, {
+   3.5697029999170957`*^9, 3.5697030235534587`*^9}, 3.5697030603211355`*^9, 
+   3.5697031595730596`*^9, {3.5697032423433356`*^9, 3.569703297279829*^9}, {
+   3.569703396929793*^9, 3.56970340480258*^9}, 3.5697035311392126`*^9, {
+   3.56976962932631*^9, 3.569769682232336*^9}, {3.569769929239464*^9, 
+   3.569770184014169*^9}, 3.5697702330441694`*^9, {3.569770317163169*^9, 
+   3.569770324220169*^9}, {3.5697703610791693`*^9, 3.569770372373169*^9}, {
+   3.569770415557169*^9, 3.5697707054331694`*^9}, {3.569770781899169*^9, 
+   3.569770789515169*^9}, {3.5697708238881693`*^9, 3.569770852010169*^9}, {
+   3.569770890477169*^9, 3.569770943285169*^9}, 3.569770986686169*^9, {
+   3.569771019498169*^9, 3.5697711612871695`*^9}, {3.5697712120591693`*^9, 
+   3.5697713412161694`*^9}, {3.5697713743341694`*^9, 
+   3.5697713792101693`*^9}, {3.5697714170921693`*^9, 3.569771441047169*^9}, {
+   3.5697726856651692`*^9, 3.569772686634169*^9}, {3.569772719979169*^9, 
+   3.569772776984169*^9}, {3.569774178848587*^9, 3.5697741805520983`*^9}, {
+   3.56977423137434*^9, 3.5697743032028823`*^9}, {3.5697744199107323`*^9, 
+   3.569774420377779*^9}, 3.569774502553996*^9, {3.569774563995139*^9, 
+   3.569774565538294*^9}, 3.569774835767314*^9, 3.5697753914438763`*^9, {
+   3.5697754402947607`*^9, 3.569775443123043*^9}, {3.569787423119975*^9, 
+   3.569787434921155*^9}, 3.5697879251721754`*^9, {3.5697880508367405`*^9, 
+   3.5697880531489716`*^9}, 3.569807984077075*^9}],
+
+Cell[BoxData[
+ InterpretationBox[
+  RowBox[{
+   StyleBox["\<\"\[LightBulb] Codebook:\\n\"\>",
+    StripOnInput->False,
+    FrontFaceColor->RGBColor[0, 0, 1],
+    BackFaceColor->RGBColor[0, 0, 1],
+    GraphicsColor->RGBColor[0, 0, 1],
+    FontSize->15,
+    FontWeight->Bold,
+    FontColor->RGBColor[0, 0, 1]], "\[InvisibleSpace]", 
+   TagBox[
+    RowBox[{"(", "\[NoBreak]", GridBox[{
+       {"\<\"0\"\>", "\<\"1\"\>", "\<\"2\"\>", "\<\"3\"\>", "\<\"4\"\>", \
+"\<\"5\"\>", "\<\"6\"\>", "\<\"7\"\>", "\<\"8\"\>", "\<\"9\"\>"},
+       {"\<\"6\"\>", "\<\"7\"\>", "\<\"8\"\>", "\<\"0\"\>", "\<\"1\"\>", \
+"\<\"2\"\>", "\<\"3\"\>", "\<\"4\"\>", "\<\"5\"\>", "\<\"9\"\>"}
+      },
+      GridBoxAlignment->{
+       "Columns" -> {{Center}}, "ColumnsIndexed" -> {}, 
+        "Rows" -> {{Baseline}}, "RowsIndexed" -> {}},
+      GridBoxSpacings->{"Columns" -> {
+          Offset[0.27999999999999997`], {
+           Offset[0.7]}, 
+          Offset[0.27999999999999997`]}, "ColumnsIndexed" -> {}, "Rows" -> {
+          Offset[0.2], {
+           Offset[0.4]}, 
+          Offset[0.2]}, "RowsIndexed" -> {}}], "\[NoBreak]", ")"}],
+    Function[BoxForm`e$, 
+     MatrixForm[BoxForm`e$]]]}],
+  SequenceForm[
+   Style["\[LightBulb] Codebook:\n", {Bold, 15, 
+     RGBColor[0, 0, 1]}], 
+   MatrixForm[{{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9"}, {
+     "6", "7", "8", "0", "1", "2", "3", "4", "5", "9"}}]],
+  Editable->False]], "Print",
+ CellChangeTimes->{3.569782048542557*^9, 3.5697853110951114`*^9, 
+  3.5697872206807327`*^9, 3.5697873258742514`*^9, 3.569787427920455*^9, 
+  3.569788108327489*^9, 3.5697884348090987`*^9, 3.5697894406302967`*^9, 
+  3.5698041436480565`*^9, 3.569810845627101*^9}],
+
+Cell[BoxData["\<\"CSC 348/648  COMPUTER SECURITY  648 TEST 1  SPRING \
+2013\\nWOOOOOOOOOOOOOOOOOOOO, YOU BROKE THIS ONE! WELL DONE. PERHAPS! I HOPE \
+YOU CAN GET ALL THE NUMBERS MAPPED CORRECTLY.\\n\\nNOW ON TO SOMETHING MORE \
+INTERESTING, A SINGER DIGITAL BEAR TRULY LOVES... YO, EMILY, WHY NOT GET RICK \
+ASTELY AS A SPEAKER FOR ACM, INSTEAD OF SOME DENTIST WHO BREAKS HIS RIBS!  \
+\\n\\nRICKROLLING IS AN INTERNET MEME[1][2] INVOLVING THE MUSIC VIDEO FOR THE \
+1987 RICK ASTLEY SONG \\\"NEVER GONNA GIVE YOU UP\\\". THE MEME IS A BAIT AND \
+SWITCH; A PERSON PROVIDES A HYPERLINK SEEMINGLY RELEVANT TO THE TOPIC AT \
+HAND, BUT ACTUALLY LEADS TO ASTLEY'S VIDEO. THE LINK CAN BE MASKED OR \
+OBFUSCATED IN SOME MANNER SO THAT THE USER CANNOT DETERMINE THE TRUE \
+DESTINATION OF THE LINK WITHOUT CLICKING. PEOPLE LED TO THE MUSIC VIDEO ARE \
+SAID TO HAVE BEEN RICKROLLED. RICKROLLING HAS EXTENDED BEYOND WEB LINKS TO \
+PLAYING THE VIDEO OR SONG DISRUPTIVELY IN OTHER SITUATIONS, INCLUDING PUBLIC \
+PLACES,[2] SUCH AS A LIVE APPEARANCE OF ASTLEY HIMSELF IN THE 2008 MACY'S \
+THANKSGIVING DAY PARADE IN NEW YORK.[1] THE MEME HAS HELPED TO REVIVE \
+ASTLEY'S CAREER.[3]\\n\\nHISTORY\\nASTLEY RECORDED \\\"NEVER GONNA GIVE YOU \
+UP\\\" ON HIS 1987 ALBUM WHENEVER YOU NEED SOMEBODY.[4] THE SONG, HIS SOLO \
+DEBUT SINGLE, WAS A NUMBER ONE HIT ON SEVERAL INTERNATIONAL CHARTS, INCLUDING \
+THE BILLBOARD HOT 100, HOT ADULT CONTEMPORARY TRACKS AND UK SINGLES CHART. AS \
+A MEANS OF PROMOTING THE SONG, IT WAS ALSO MADE INTO ASTLEY'S FIRST MUSIC \
+VIDEO, WHICH FEATURES HIM PERFORMING THE SONG WHILE \
+DANCING.[5]\\n\\nRICKROLLING IS SAID TO HAVE BEGUN AS A VARIANT OF AN EARLIER \
+PRANK FROM THE IMAGEBOARD 4CHAN KNOWN AS DUCKROLLING,[6] IN WHICH A LINK TO \
+SOMEWHERE (SUCH AS A SPECIFIC PICTURE OR NEWS ITEM) WOULD INSTEAD LEAD TO A \
+THREAD OR SITE CONTAINING AN EDITED PICTURE OF A DUCK WITH WHEELS. THE USER \
+AT THAT POINT IS SAID TO HAVE BEEN \\\"DUCKROLLED\\\".\\n\\nTHE FIRST KNOWN \
+INSTANCE OF A RICKROLL OCCURRED IN MAY 2007 ON /V/, 4CHAN'S VIDEO GAME BOARD, \
+WHERE A LINK TO THE RICK ASTLEY VIDEO WAS CLAIMED TO BE A MIRROR OF THE FIRST \
+TRAILER FOR GRAND THEFT AUTO IV (WHICH WAS UNAVAILABLE DUE TO HEAVY TRAFFIC). \
+THE JOKE WAS CONFINED TO 4CHAN FOR A VERY BRIEF PERIOD.[6]\\n\\nBY MAY \
+2008,[7] THE PRACTICE HAD SPREAD BEYOND 4CHAN AND BECAME AN INTERNET \
+PHENOMENON, EVENTUALLY ATTRACTING COVERAGE IN THE MAINSTREAM MEDIA.[2][8][9] \
+AN APRIL 2008 POLL BY SURVEYUSA ESTIMATED THAT AT LEAST 18 MILLION AMERICAN \
+ADULTS HAD BEEN RICKROLLED.[10] IN SEPTEMBER 2009, WIRED MAGAZINE PUBLISHED A \
+GUIDE TO MODERN HOAXES WHICH LISTED RICKROLLING AS ONE OF THE BETTER KNOWN \
+BEGINNER-LEVEL HOAXES, ALONGSIDE THE FAKE E-MAIL CHAIN LETTER.[11]\\n\\nTHE \
+ORIGINAL VIDEO ON YOUTUBE USED FOR RICKROLLING WAS REMOVED FOR TERMS OF USE \
+VIOLATIONS IN FEBRUARY 2010[12] BUT WAS REPOSTED WITHIN A DAY.[13]  \
+\\n\\nEXAMPLES\\nEWU BASKETBALL GAMES\\nFOUR WOMEN'S BASKETBALL GAMES AT \
+EASTERN WASHINGTON UNIVERSITY (EWU) WERE RICKROLLED DURING MARCH 2008. BEFORE \
+THE START OF THE GAMES, \\\"NEVER GONNA GIVE YOU UP\\\" WAS PLAYED WHILE A \
+RICK ASTLEY IMPERSONATOR DANCED AND LIP-SYNCHED TO THE MUSIC. A VIDEO \
+CONTAINING FOOTAGE OF THE PRE-GAME RICKROLLINGS, MISLEADINGLY COMBINED WITH \
+REAL GAME BREAK FOOTAGE, WAS LATER RELEASED ON YOUTUBE.[2][17] \\n\\nTHE NEW \
+YORK TIMES ORIGINALLY REPORTED THAT A SINGLE GAME HAD ACTUALLY BEEN \
+INTERRUPTED BY THE RICKROLLING. ON 27 MARCH 2008 IT ISSUED A CORRECTION \
+CLARIFYING THE SITUATION, AND SAYING THAT THE INTERRUPTION NEVER TOOK PLACE, \
+BUT WAS RATHER A HOAX BY PAWL FISHER, A STUDENT; DAVIN PERRY, WHO SHOOTS GAME \
+VIDEOS FOR THE UNIVERSITY; AND DAVE COOK, THE UNIVERSITY'S SPORTS INFORMATION \
+DIRECTOR.[2][17][18][19][20][21]\\n\\nNEW YORK METS\\nON 4 APRIL 2008, MANY \
+WEB COMMUNITIES, STARTING WITH FARK.COM,[22] URGED THEIR READERS TO VOTE \
+\\\"NEVER GONNA GIVE YOU UP\\\" FOR THE 8TH INNING SING-ALONG AT SHEA STADIUM \
+FOR THE NEW YORK METS SEASON. THE METS POSTED A WEB POLL TO SELECT A SONG, \
+AND LEFT A BLANK FIELD FOR WRITE-INS. THE METS ORGANIZATION ANNOUNCED ON 7 \
+APRIL 2008 THAT \\\"NEVER GONNA GIVE YOU UP\\\" WAS THE WINNER WITH MORE THAN \
+FIVE MILLION VOTES.[23] THE METS DECIDED NOT TO COMMIT TO USING ASTLEY'S SONG \
+AND SUBSEQUENTLY ANNOUNCED A RUN-OFF AMONG SIX SONGS THAT WOULD BE PLAYED AT \
+SHEA STADIUM FOR THE NEXT SIX GAMES, STARTING WITH \\\"NEVER GONNA GIVE YOU \
+UP\\\" ON 8 APRIL 2008.[24]\\nMLB.COM LATER REPORTED ON THE GAME, CLAIMING \\\
+\"NEVER GONNA GIVE YOU UP\\\" WAS PLAYED AS A \\\"RESULT OF FANS RIGGING THE \
+VOTE IN FAVOR OF ASTLEY, ALL PART OF A UNIVERSAL INTERNET PHENOMENON KNOWN AS \
+RICK ROLLING\\\". THE SONG WAS PLAYED DURING THE HOME OPENER AND WAS GREETED \
+WITH \\\"A SHOWER OF BOOS\\\".[25]\\n\\nAPRIL FOOLS' DAY, 2008\\nON APRIL \
+FOOLS' DAY 2008 AND THE FOLLOWING WEEKS, NUMEROUS SEEMINGLY UNCOORDINATED \
+INSTANCES OF RICKROLLING APPEARED ON THE INTERNET, AND NEWS MEDIA. ALL OF THE \
+FEATURED VIDEOS ON YOUTUBE'S FRONT PAGE HYPERLINKED TO THE RICKROLL. THE \
+PRANK BEGAN WITH INTERNATIONAL YOUTUBE PORTALS BEFORE APPEARING ON THE MAIN \
+SITE.[26]\\nSOCIAL BLOG WEBSITE LIVEJOURNAL ANNOUNCED ON THE SAME DAY THAT \
+THEY WOULD BE ADDING A NEW MEMBER TO THEIR ADVISORY BOARD, LINKING MEMBERS TO \
+THE JOURNAL \\\"RICKASTLEY\\\", WHICH CONTAINS A RICKROLL.[27]\\nTHE WEBSITE \
+FARK FEATURED A LINK TO A VIDEO CLAIMING TO BE A BLOOPER REEL FOR THE MUPPETS \
+BUT INSTEAD LINKED TO A VIDEO OF BEAKER PERFORMING RICK ASTLEY'S SONG (TO A \
+VIDEO OF HIM ORIGINALLY PERFORMING \\\"FEELINGS\\\" ON THE MUPPET SHOW).[28] \
+OTHER SOCIAL BOOKMARKING SITES SUCH AS DIGG[29] AND REDDIT[CITATION NEEDED] \
+SUBSEQUENTLY JOINED IN LINKING THE VIDEO.\\nTHE ONLINE WEB STORE THINKGEEK \
+ADVERTISED ON THEIR FRONT PAGE A BETAMAX TO HD DVD CONVERTER DEVICE. IN THE \
+PRODUCT PAGE A DEMONSTRATION VIDEO WAS LINKED WHICH WAS, IN ACTUALITY, A \
+RICKROLL.[30]\\n\\nDAN KAMINSKY\\nIN APRIL 2008, SECURITY EXPERT DAN KAMINSKY \
+DEMONSTRATED A SERIOUS SECURITY VULNERABILITY BY SETTING UP RICKROLLS ON \
+FACEBOOK AND PAYPAL.[31]\\n\\nMICHELLE OBAMA\\nON 7 JUNE 2008, A NUMBER OF \
+POLITICAL BLOGS, INCLUDING WONKETTE,[32] ANDREW SULLIVAN,[33] AND BALLOON \
+JUICE,[34] POSTED AN ARTICLE CLAIMING TO SHOW MICHELLE OBAMA GOING ON A RANT \
+FULL OF RACIST REFERENCES TO \\\"WHITEY\\\", BUT THE VIDEO WAS ACTUALLY A \
+RICKROLL.\\n\\nBARACK ROLL\\nHUGH ATKIN, AN AUSTRALIAN LAWYER AND NOTABLE \
+PRODUCER OF INTERNET VIRAL VIDEOS,[35] CREATED A POPULAR YOUTUBE PARODY VIDEO \
+OF THE RICKROLLING MEME INVOLVING U.S. PRESIDENT BARACK OBAMA, THE THEN 2008 \
+PRESIDENTIAL CANDIDATE FOR THE DEMOCRATIC PARTY, AND A SENATOR FROM ILLINOIS, \
+ENTITLED \\\"BARACK ROLL\\\" THAT HAS BEEN WATCHED ABOUT 6 MILLION TIMES \
+SINCE ITS RELEASE. THE ORIGINAL VIDEO HAS SINCE BEEN MUTED DUE TO AN \
+UNAUTHORIZED SOUNDTRACK,[36] ALTHOUGH, AS USUAL IN SUCH CASES, MANY COPIES OF \
+THE VIDEO HAVE BEEN RE-UPLOADED BY OTHER USERS. THE VIDEO CONSISTS OF CLIPS \
+OF OBAMA SPEAKING THE WORDS OF ASTLEY'S SONG AND SCENES OF HIS APPEARANCE ON \
+THE ELLEN DEGENERES SHOW. A FOLLOW-UP VIDEO SHOWS SENATOR JOHN MCCAIN BEING \
+\\\"BARACK ROLLED\\\" AT THE REPUBLICAN NATIONAL CONVENTION, THOUGH IT NEVER \
+HAPPENED; THE \\\"BARACK ROLL\\\" IMAGE WAS DISPLAYED ON THE GIANT BLUE SKY \
+BACKGROUND THAT WAS BEHIND JOHN MCCAIN DURING PARTS OF HIS SPEECH, AND THE \
+VIDEO WAS PIECED TOGETHER FROM FOOTAGE OF THE EVENT. THE VIDEO ENDS WITH WHAT \
+LOOKS LIKE THE DELEGATION CHEERING WHILE CHANTING OBAMA'S NAME.[37] THIS \
+VERSION WON THE FAVORITE USER GENERATED VIDEO AWARD AT THE 35TH PEOPLE'S \
+CHOICE AWARDS.\\nIT WAS HIGHLIGHTED ON BLOGS FOR THE NEW YORK TIMES,[38] THE \
+POLITICO,[39] COMEDY CENTRAL,[40] ANDREW SULLIVAN[41] AND SPORTS \
+ILLUSTRATED.[42] WRITING FOR TIME MAGAZINE'S 2009 TIME 100 ISSUE, ASTLEY \
+HIMSELF MENTIONED THE VIDEO IN HIS WRITEUP FOR 4CHAN FOUNDER \
+MOOT.[43]\\n\\n2008 MACY'S THANKSGIVING DAY PARADE\\nON 27 NOVEMBER 2008, \
+ASTLEY PARTICIPATED IN A LIVE RICKROLL DURING THE MACY'S THANKSGIVING DAY \
+PARADE WHILE THE FOSTER'S HOME FOR IMAGINARY FRIENDS CHARACTERS WERE SINGING \
+\\\"BEST FRIEND\\\", THE THEME FROM THE 1970S TV SERIES THE COURTSHIP OF \
+EDDIE'S FATHER. MIDWAY THROUGH THE SONG, ASTLEY EMERGED FROM THE FLOAT AND \
+BEGAN TO LIP SYNC HIS SIGNATURE HIT FOR THE CROWD. AT THE END OF ASTLEY'S \
+PERFORMANCE, CHEESE (A CHARACTER FROM FOSTER'S) SHOUTED OUT \\\"I LIKE \
+RICKROLLING?\\\"[44]\\n\\n2008 CHRISTMAS FACEBOOK CAMPAIGN\\nALSO KNOWN AS \
+THE \\\"ULTIMATE RICKROLL\\\".\\nON 1 DECEMBER 2008, A CAMPAIGN WAS STARTED \
+ON FACEBOOK IN AN ATTEMPT TO MAKE THE SONG THE 2008 CHRISTMAS #1 IN THE UK AS \
+AN ATTEMPT TO \\\"RICKROLL\\\" THE COUNTRY DURING CHRISTMAS. THE CAMPAIGN'S \
+PURPOSE WAS TO STOP THE X-FACTOR FROM GAINING THE #1 CHRISTMAS SPOT, THEREBY \
+ENDING THE SHOW'S CHAIN OF SUCCESS. THE GROUP ATTRACTED NEARLY 30,000 PEOPLE \
+IN ITS FIRST WEEK ACTIVE. CAMPAIGNERS WERE ENCOURAGED TO GET AS MANY PEOPLE \
+AS POSSIBLE TO DOWNLOAD THE SONG FROM ITUNES BETWEEN 15 AND 20 DECEMBER 2008. \
+THE SONG ONLY MANAGED TO PEAK AT #73; HOWEVER, THIS WAS LATER FOUND TO BE A \
+DELIBERATE LOWERING OF THE SONG'S PLACE (HAVING REACHED #3 A WEEK BEFORE IT \
+CAME TO ITS FINISH) DUE TO THE COMPANY'S BELIEF THAT \\\"THE SONGS [SIC] \
+RANKING WAS RIDICULOUS AND RIGGING A CONTEST WAS UNFAIR ON OTHER \
+ARTISTS\\\".[45][NOT IN CITATION GIVEN] THE CAMPAIGNERS, JON AND TRACY \
+MORTER, WERE ULTIMATELY SUCCESSFUL THE FOLLOWING YEAR WITH A RAGE AGAINST THE \
+MACHINE CAMPAIGN FOR THE 1992 SONG \\\"KILLING IN THE NAME\\\" THAT HIT THE \
+NO.1 SPOT IN DECEMBER 2009.\\n\\nNANCY PELOSI\\nON 13 JANUARY 2009, IN HONOR \
+OF THE NEW YOUTUBE HUB FOR CONGRESS, U.S. SPEAKER OF THE HOUSE NANCY PELOSI \
+UPLOADED A VIDEO CALLED \\\"SPEAKER PELOSI PRESENTS CAPITOL CAT CAM\\\" TO \
+HER OFFICIAL YOUTUBE CHANNEL. SHE DESCRIBED IT AS \\\"A BEHIND THE SCENES \
+VIEW OF THE SPEAKER'S OFFICE IN THE U.S. CAPITOL\\\". THE VIDEO DEPICTS CATS \
+ROAMING AROUND THE OFFICE. A RICKROLL OCCURS APPROXIMATELY HALFWAY THROUGH \
+THE VIDEO.[46]\\n\\nIPHONE WORM\\nIN OCTOBER/NOVEMBER 2009, A WORM DESIGNED \
+TO INFECT JAILBROKEN IPHONES CHANGED THE WALLPAPER OF INFECTED PHONES TO A \
+PICTURE OF RICK ASTLEY OVERLAID WITH THE TEXT \\\"IKEE IS NEVER GOING TO GIVE \
+YOU UP\\\".[47]\\n\\nOREGON HOUSE OF REPRESENTATIVES\\nIN FEBRUARY 2010, A \
+BIPARTISAN GROUP OF OREGON REPRESENTATIVES CONSPIRED TO DO A PHANTOM RICKROLL \
+DURING HOUSE SESSIONS. EACH OF THE CONSPIRATORS WAS GIVEN A PORTION OF THE \
+LYRICS OF NEVER GONNA GIVE YOU UP TO WORK UNOBTRUSIVELY INTO THEIR STATEMENTS \
+DURING LEGISLATIVE DISCUSSION. THIS SCHEME WAS FINALLY REVEALED ON APRIL 1, \
+2011, WHEN A VIDEO, EDITED BY REPRESENTATIVE JEFFERSON SMITH AND HIS \
+CO-CONSPIRATORS, WAS RELEASED OF THE VARIOUS REPRESENTATIVES MAKING THEIR \
+STATEMENTS, PUT IN PROPER LYRICAL ORDER.[48]\\n\\nWHITE HOUSE TWITTER \
+FEED\\nON 27 JULY 2011 OFFICIALS MANAGING THE WHITE HOUSE TWITTER FEED \
+RESPONDED TO A MESSAGE THAT THE FEED WAS DULL, WRITING \\\"SORRY TO HEAR \
+THAT. FISCAL POLICY IS IMPORTANT, BUT CAN BE DRY SOMETIMES. HERE'S SOMETHING \
+MORE FUN,\\\" FOLLOWED BY A LINK TO NEVER GONNA GIVE YOU UP.[49]\\n\\nCSC \
+348/648 RICKROLL\\nIT SEEMS THAT FULP CONSTANTLY ENJOYS RICKROLLIN' HIS \
+CLASS, WEIRD... WELL THE CLASS BETTER GET USED TO IT CAUSE IT GONNA HAPPEN \
+OVER AND OVER AND OVER AND OVER. IF YOU HAVE READ THIS FAR, WELL THEN THIS \
+SHOULD HELP 0123456789.\\n\\nOTHERS\\nA RICKROLL FLASH MOB TOOK PLACE ON 11 \
+APRIL 2008, IN LONDON'S LIVERPOOL STREET TRAIN STATION WITH AN ESTIMATED 300\
+\[Dash]400 PEOPLE IN ATTENDANCE.[50][51] WHEN THE FLASH MOB FINISHED THE \
+COUNTDOWN, THEY SANG THE SONG FROM BEGINNING TO END.\\nONE WEB SITE, \
+PRANKDIALER.COM,[52] OFFERS A RICKROLL-BY-PHONE SERVICE, ALLOWING VISITORS TO \
+ENTER A PHONE NUMBER TO BE CALLED AND HAVE THE SONG PLAYED TO THE ANSWERING \
+PARTY.[53]\\nTHE MIT DOME WAS HACKED ON SEPTEMBER 9, 2009, TO SHOW A GIANT \
+SET OF THE FIRST NOTES OF \\\"NEVER GONNA GIVE YOU UP\\\".[54]\\nAS PART OF \
+PROMOTION FOR THEIR TITLE DANTE'S INFERNO, ELECTRONIC ARTS SENT WOODEN BOXES \
+TO SEVERAL VIDEO GAME WEBSITES, INCLUDING THE ESCAPIST, DESTRUCTOID AND \
+CHUD.COM. EACH BOX CONTAINED A HAMMER AND A PAIR OF GOGGLES, AND WHEN OPENED, \
+THE BOX WOULD PLAY THE RICK ASTLEY SONG ON A CONTINUOUS LOOP. THE ONLY WAY TO \
+STOP IT WAS TO DESTROY IT. AFTER DOING SO, THE RECIPIENT WOULD THEN FIND A \
+SCROLL CLAIMING THAT HE OR SHE WAS DAMNED TO HELL FOR COMMITTING THE SIN OF \
+WRATH.[55][56][57]\\nMICROSOFT DEALT WITH PEOPLE ABUSING THE FREE WI-FI AT \
+ITS 2009 BRISBANE TECHED CONFERENCE WITH BITTORRENTING[58] BY REDIRECTING \
+LOCAL DNS RESULTS FOR THE TOP BITTORRENT TRACKERS TO A LOCAL WEB SERVER \
+CONTAINING SOME RICKROLL SCRIPTS.[59][60]\\nIN MAY 2008, THERE WAS A FLASHMOB \
+IN BALTIMORE INNER HARBOR WHICH INCLUDED 50 PEOPLE SINGING \\\"NEVER GONNA \
+GIVE YOU UP\\\".[61]\\nGOOGLE.COM'S GOOGLE LABS BOOK NGRAM VIEWER, A \
+PHRASE-TRENDING GRAPH OF SEARCHED TERMS, DISPLAYS THE YOUTUBE VIDEO IF THE \
+TERM \\\"NEVER GONNA GIVE YOU UP\\\" IS SEARCHED FOR.[62]\\nON THE 29 JULY \
+2011 EPISODE OF THE BRITISH GAMESHOW POINTLESS, THERE WAS A QUESTION ABOUT \
+THE SONG. IN THE SECOND QUESTION OF THE THIRD ROUND, TWO TEAMS TRIED TO GUESS \
+ONE OF SIX THINGS RICK ASTLEY IS \\\"NEVER GONNA DO\\\".\\nON 11 JANUARY \
+2012, THE OCCUPY PITTSBURGH MOVEMENT SAID THEY WILL PLAY \\\"NEVER GONNA GIVE \
+YOU UP\\\" IF CONFRONTED BY AUTHORITIES.[63]\\nIN THE FM (TV SERIES), IN THE \
+END OF THE FIRST EPISODE, CHRIS O'DOWD'S CHARACTER, WHILE PRETENDING TO BE A \
+SKILLFUL DJ AND FAILING, ACCIDENTALLY RICKROLLS THE CROWD IN THE CLUB IN \
+WHICH HE IS PERFORMING.\\n\\nEFFECTS ON ASTLEY AND REACTION\\nIN A MARCH 2008 \
+INTERVIEW, ASTLEY SAID THAT HE FOUND THE RICKROLLING OF FULP'S CLASSES TO BE \
+\\\"HILARIOUS\\\" AND IN 2013 HE WANTED TO BE A SPEAKER AT WAKE FOREST, BUT A \
+DENTIST WITH BROKEN RIBS WAS SELECTED OVER HIM. HE ALSO SAID THAT HE WILL NOT \
+TRY TO CAPITALIZE ON THE RICKROLL PHENOMENON WITH A NEW RECORDING OR REMIX OF \
+HIS OWN, BUT THAT HE WOULD BE HAPPY TO HAVE OTHER ARTISTS REMIX IT. OVERALL, \
+ASTLEY IS NOT TROUBLED BY THE PHENOMENON, STATING THAT HE FINDS IT \
+\\\"BIZARRE AND FUNNY\\\" AND THAT HIS ONLY CONCERN IS THAT HIS \\\"DAUGHTER \
+DOESN'T GET EMBARRASSED ABOUT IT\\\".[64] A SPOKESPERSON FOR ASTLEY'S RECORD \
+LABEL RELEASED A COMMENT WHICH SHOWED THAT ASTLEY'S INTEREST WITH THE \
+PHENOMENON HAD FADED, AS THEY STATED \\\"I'M SORRY, BUT HE'S DONE TALKING \
+ABOUT RICKROLLING\\\".[6] SIMPLY PUT, HE ONLY WANTED TO PERSONALLY RICKROLL \
+WAKE FOREST, BUT EMILY SAID NO. EMILY CRUSHED HIS ONLY WISH, WAY TO GO EMILY. \
+WE HOPE YOU ARE HAPPY, CAUSE RICK AIN'T.\\n\\nIN NOVEMBER 2008, RICK ASTLEY \
+WAS NOMINATED FOR \\\"BEST ACT EVER\\\" AT THE MTV EUROPE MUSIC AWARDS AFTER \
+THE ONLINE NOMINATION FORM WAS FLOODED WITH VOTES.[65] THE PUSH TO MAKE \
+ASTLEY THE WINNER OF THE AWARD CONTINUED AFTER THE ANNOUNCEMENT, AS WELL AS \
+EFFORTS TO ENCOURAGE MTV TO PERSONALLY INVITE ASTLEY TO THE AWARDS \
+CEREMONY.[66] ON 10 OCTOBER ASTLEY'S WEBSITE CONFIRMED THAT AN INVITATION TO \
+THE AWARDS HAD BEEN RECEIVED. ON 6 NOVEMBER 2008, JUST HOURS BEFORE THE \
+CEREMONY WAS DUE TO AIR, IT WAS REPORTED THAT MTV EUROPE DID NOT WANT TO GIVE \
+ASTLEY THE AWARD AT THE CEREMONY, INSTEAD WANTING TO PRESENT IT AT A LATER \
+DATE. MANY FANS WHO VOTED FOR ASTLEY FELT THE AWARDS CEREMONY FAILED TO \
+ACKNOWLEDGE HIM AS A LEGITIMATE ARTIST. ASTLEY STATED IN AN INTERVIEW THAT HE \
+FELT THE AWARD WAS \\\"DAFT\\\", BUT NOTED THAT HE THOUGHT THAT \\\"MTV WERE \
+THOROUGHLY RICKROLLED\\\", AND WENT ON TO THANK EVERYONE WHO VOTED FOR \
+HIM.[67]\\nIN 2009, ASTLEY WROTE ABOUT 4CHAN FOUNDER MOOT FOR TIME MAGAZINE'S \
+ANNUAL TIME 100 ISSUE, WHERE HE THANKED MOOT FOR THE RICKROLLING \
+PHENOMENON.[43]\\nACCORDING TO THE REGISTER, HOWEVER, ASTLEY HAS ONLY \
+DIRECTLY MADE $12, IN PERFORMANCE ROYALTIES FROM YOUTUBE, FROM THE MEME.[68] \
+\\n\\n\"\>"], "Output",
+ CellChangeTimes->{3.5697754446351943`*^9, 3.5697820485615587`*^9, 
+  3.569785311145111*^9, 3.5697872207017355`*^9, 3.5697873258942533`*^9, 
+  3.569787427951458*^9, 3.5697881083554916`*^9, 3.5697884348120985`*^9, 
+  3.5697894406332955`*^9, 3.5698041436940613`*^9, 3.569810845632101*^9}]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+},
+WindowSize->{976, 775},
+WindowMargins->{{114, Automatic}, {Automatic, 0}},
+PrintingCopies->1,
+PrintingPageRange->{Automatic, Automatic},
+PrintingOptions->{"PrintCellBrackets"->False,
+"PrintMultipleHorizontalPages"->False,
+"PrintRegistrationMarks"->False,
+"PrintingMargins"->{{54, 54}, {72, 72}}},
+Magnification->0.699999988079071,
+FrontEndVersion->"10.2 for Mac OS X x86 (32-bit, 64-bit Kernel) (July 6, \
+2015)",
+StyleDefinitions->"Default.nb"
+]
+(* End of Notebook Content *)
+
+(* Internal cache information *)
+(*CellTagsOutline
+CellTagsIndex->{}
+*)
+(*CellTagsIndex
+CellTagsIndex->{}
+*)
+(*NotebookFileOutline
+Notebook[{
+Cell[545, 20, 307, 7, 35, "Subsubtitle"],
+Cell[CellGroupData[{
+Cell[877, 31, 99, 1, 64, "Title"],
+Cell[CellGroupData[{
+Cell[1001, 36, 673, 12, 84, "Subsection"],
+Cell[CellGroupData[{
+Cell[1699, 52, 5794, 119, 118, "Input"],
+Cell[7496, 173, 48524, 1424, 263, "Output"]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[56069, 1603, 719, 11, 66, "Subsection"],
+Cell[CellGroupData[{
+Cell[56813, 1618, 2089, 49, 69, "Input"],
+Cell[58905, 1669, 22103, 644, 225, "Output"],
+Cell[81011, 2315, 27665, 805, 223, "Output"]
+}, Open  ]],
+Cell[108691, 3123, 2747, 78, 93, "Input"],
+Cell[CellGroupData[{
+Cell[111463, 3205, 5575, 120, 144, "Input"],
+Cell[CellGroupData[{
+Cell[117063, 3329, 3680, 82, 104, "Print"],
+Cell[120746, 3413, 6530, 140, 117, "Print"],
+Cell[127279, 3555, 1889, 38, 27, "Print"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[129229, 3600, 1434, 22, 137, "Subsection"],
+Cell[CellGroupData[{
+Cell[130688, 3626, 4497, 91, 116, "Input"],
+Cell[CellGroupData[{
+Cell[135210, 3721, 2411, 49, 41, "Print"],
+Cell[137624, 3772, 6403, 138, 117, "Print"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]],
+Cell[CellGroupData[{
+Cell[144088, 3917, 875, 19, 85, "Subsection"],
+Cell[CellGroupData[{
+Cell[144988, 3940, 2991, 56, 61, "Input"],
+Cell[147982, 3998, 1682, 39, 41, "Print"],
+Cell[149667, 4039, 16307, 212, 1893, "Output"]
+}, Open  ]]
+}, Open  ]]
+}, Open  ]]
+}
+]
+*)
+
+(* End of internal cache information *)
